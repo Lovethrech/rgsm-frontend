@@ -5,11 +5,15 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/supabase'
   ],
-  supabase:{
-    url: process.env.SUPABASE_URL,
-    key: process.env.SUPABASE_ANON_KEY,
-    redirect: false
-  },
+  // supabase:{
+  //   url: process.env.SUPABASE_URL,
+  //   key: process.env.SUPABASE_ANON_KEY,
+  //   redirect: false,   
+  //   cookieOptions:{
+  //     maxAge: 60 * 60 * 24 * 7,  // 7 days
+  //     secure: true
+  //   }
+  // },
   app:{
     head:{
       link:[

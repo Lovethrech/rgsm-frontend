@@ -8,7 +8,11 @@ export default defineNuxtConfig({
   supabase:{
     url: process.env.SUPABASE_URL,
     key: process.env.SUPABASE_ANON_KEY,
-    redirect: false
+    redirect: false,   
+    cookieOptions:{
+      maxAge: 60 * 60 * 24 * 7,  // 7 days
+      secure: true
+    }
   },
   app:{
     head:{
