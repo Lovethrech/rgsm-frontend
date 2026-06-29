@@ -11,7 +11,7 @@ useHead({
   }
 })
 
-const title = 'RGSM'
+const title = 'RGSM Dashboard'
 const description = ''
 
 useSeoMeta({

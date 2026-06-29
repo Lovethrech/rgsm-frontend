@@ -6,15 +6,15 @@ export default defineNuxtConfig({
     '@vite-pwa/nuxt',
     '@nuxtjs/supabase'
   ],
-  // supabase:{
-  //   url: process.env.SUPABASE_URL,
-  //   key: process.env.SUPABASE_ANON_KEY,
-  //   redirect: false,   
-  //   cookieOptions:{
-  //     maxAge: 60 * 60 * 24 * 7,  // 7 days
-  //     secure: true
-  //   }
-  // },
+  supabase:{
+    url: process.env.SUPABASE_URL,
+    key: process.env.SUPABASE_ANON_KEY,
+    redirect: false,   
+    cookieOptions:{
+      maxAge: 60 * 60 * 24 * 7,  // 7 days
+      secure: true
+    }
+  },
   app:{
     head:{
       link:[
@@ -30,8 +30,8 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
   pwa: {
     manifest: {
-      name: 'RFID Geofence Security Management',
-      short_name: 'RGS',
+      name: 'Clout Collabs',
+      short_name: 'CloutCollabs',
       theme_color: '#6D28D9',
       background_color: '#0F172A',
       icons: []

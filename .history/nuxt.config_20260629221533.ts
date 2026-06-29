@@ -30,8 +30,8 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
   pwa: {
     manifest: {
-      name: 'RFID Geofence Security Management',
-      short_name: 'RGS',
+      name: 'C',
+      short_name: 'CloutCollabs',
       theme_color: '#6D28D9',
       background_color: '#0F172A',
       icons: []

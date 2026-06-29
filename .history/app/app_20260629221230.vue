@@ -11,7 +11,7 @@ useHead({
   }
 })
 
-const title = 'RGSM'
+const title = 'RGSM Dashboard'
 const description = ''
 
 useSeoMeta({
@@ -25,7 +25,8 @@ useSeoMeta({
 </script>
 
 <template>
-  <NuxtLayout>
+  <UApp>
       <NuxtPage />
-  </NuxtLayout>
+    </UMain>
+  </UApp>
 </template>
