@@ -38,7 +38,6 @@
     text-align: center;
 }
 .auth-main-title{
-    margin-top: -3vh;
     color: #93C5FD; 
     font-weight:900;
     font-size: 4vh;
@@ -70,7 +69,7 @@
 }
 @media screen and (max-width: 650px) {
     .auth-main{
-        width: 680vw;
+        width: 60vw;
     }
 }
 </style>

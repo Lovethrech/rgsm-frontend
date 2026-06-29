@@ -38,7 +38,6 @@
     text-align: center;
 }
 .auth-main-title{
-    margin-top: -3vh;
     color: #93C5FD; 
     font-weight:900;
     font-size: 4vh;
@@ -63,14 +62,14 @@
     line-height: 1.5;
 }
 
-@media screen and (max-width: 990px) and (min-width: 651px) {
+@media screen and (max-width: 990px) and (max-height: 650px) {
     .auth-main{
         width: 60vw;
     }
 }
 @media screen and (max-width: 650px) {
     .auth-main{
-        width: 680vw;
+        width: 60vw;
     }
 }
 </style>

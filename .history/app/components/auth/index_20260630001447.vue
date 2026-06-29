@@ -38,7 +38,7 @@
     text-align: center;
 }
 .auth-main-title{
-    margin-top: -3vh;
+    margin-top:
     color: #93C5FD; 
     font-weight:900;
     font-size: 4vh;

@@ -22,9 +22,9 @@
             </NuxtLink>
         </div>
         <div class="fine-print">
-            By continuing, you agree to the Terms<br />
-            and Privacy Policy.
-        </div>
+      By continuing, you agree to the Terms<br />
+      and Privacy Policy.
+    </div>
     </section>
 </template>
 
@@ -38,7 +38,6 @@
     text-align: center;
 }
 .auth-main-title{
-    margin-top: -3vh;
     color: #93C5FD; 
     font-weight:900;
     font-size: 4vh;
@@ -56,21 +55,10 @@
     color:var(--blue-300); 
     font-weight:600;
 }
-.fine-print {
-    text-align: center;
-    font-size: 1.8vh;
-    color: var(--slate-600);
-    line-height: 1.5;
-}
 
-@media screen and (max-width: 990px) and (min-width: 651px) {
+@media screen and (max-width: 990px) {
     .auth-main{
         width: 60vw;
-    }
-}
-@media screen and (max-width: 650px) {
-    .auth-main{
-        width: 680vw;
     }
 }
 </style>
