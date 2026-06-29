@@ -2,10 +2,10 @@
 const formInputAndLabelDatas=[
     {
         "id":1,
-        "name":"Email",
-        "nameType":"email",
-        "placeholder":"Your Email",
-        "errorMsg":"Your Email is empty"
+        "name":"Username",
+        "nameType":"text",
+        "placeholder":"Your Username",
+        "errorMsg":"Your Username is empty"
     },
     {
         "id":2,
@@ -62,39 +62,5 @@ const submitLoginDetails=()=>{
 </template>
 
 <style scoped>
-.form-input-and-label-ctn{
-    width:100%;
-    display: flex;
-    flex-direction: column;
-}
-.form-input-and-label-ctn label, .form-input-and-label-error{
-    background-color: #000000;
-    padding: 0.3vh 1vh;
-}
-.form-input-and-label-ctn label{
-    width: 22%;
-    font-size: 1.4vh;
-    color: #d1d5db;
-    font-weight: 700;
-    border-top-right-radius: 2vh;
-    border-bottom-right-radius: 2vh;
-}
-.form-input-and-label-ctn input{
-    font-size: 2vh;
-    padding: 1vh;
-    margin-bottom: 2vh;
-    background: transparent;
-    color: #ffffff;
-    border: 0;
-    border-bottom: 0.1vh solid #d1d5db;
-}
-.form-input-and-label-error{
-    position: absolute;
-    right: 3vh;
-    text-align: right;
-    font-size: 1.3vh;
-    color: red;
-    border-top-left-radius: 2vh;
-    border-bottom-left-radius: 2vh;
-}
+
 </style>

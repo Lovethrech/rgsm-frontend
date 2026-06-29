@@ -3,7 +3,7 @@ const formInputAndLabelDatas=[
     {
         "id":1,
         "name":"Email",
-        "nameType":"email",
+        "nameType":"text",
         "placeholder":"Your Email",
         "errorMsg":"Your Email is empty"
     },

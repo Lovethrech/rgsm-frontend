@@ -2,10 +2,10 @@
 const formInputAndLabelDatas=[
     {
         "id":1,
-        "name":"Email",
-        "nameType":"email",
-        "placeholder":"Your Email",
-        "errorMsg":"Your Email is empty"
+        "name":"Username",
+        "nameType":"text",
+        "placeholder":"Your Username",
+        "errorMsg":"Your Username is empty"
     },
     {
         "id":2,

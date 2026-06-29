@@ -2,10 +2,10 @@
 const formInputAndLabelDatas=[
     {
         "id":1,
-        "name":"Email",
-        "nameType":"email",
-        "placeholder":"Your Email",
-        "errorMsg":"Your Email is empty"
+        "name":"Username",
+        "nameType":"text",
+        "placeholder":"Your Username",
+        "errorMsg":"Your Username is empty"
     },
     {
         "id":2,
@@ -61,7 +61,6 @@ const submitLoginDetails=()=>{
     </form>
 </template>
 
-<style scoped>
 .form-input-and-label-ctn{
     width:100%;
     display: flex;
@@ -97,4 +96,3 @@ const submitLoginDetails=()=>{
     border-top-left-radius: 2vh;
     border-bottom-left-radius: 2vh;
 }
-</style>
