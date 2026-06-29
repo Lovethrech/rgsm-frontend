@@ -48,7 +48,7 @@
     margin-top:auto;
 }
 .auth-question-link{
-    color:var(--blue-300); 
+    color:var(--pink-300); 
     font-weight:600;
 }
 

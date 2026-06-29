@@ -13,11 +13,11 @@
         </div>
         <div class="auth-question-ctn">
             <span class="auth-question">
-                Don't have an account yet?
+                
             </span>
             <NuxtLink to='/signup'> 
                 <span class='auth-question-link'>
-                    Sign up
+                    {{ authQLinkDesc }}
                 </span>
             </NuxtLink>
         </div>
@@ -40,16 +40,6 @@
 }
 .auth-main-desc{
     color: #9ca3af;
-}
-.auth-question-ctn{
-    text-align:center; 
-    font-size:1em; 
-    color:var(--slate-400); 
-    margin-top:auto;
-}
-.auth-question-link{
-    color:var(--blue-300); 
-    font-weight:600;
 }
 
 @media screen and (max-width: 990px) {

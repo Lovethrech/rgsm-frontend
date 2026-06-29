@@ -41,16 +41,7 @@
 .auth-main-desc{
     color: #9ca3af;
 }
-.auth-question-ctn{
-    text-align:center; 
-    font-size:1em; 
-    color:var(--slate-400); 
-    margin-top:auto;
-}
-.auth-question-link{
-    color:var(--blue-300); 
-    font-weight:600;
-}
+
 
 @media screen and (max-width: 990px) {
     .auth-main{
