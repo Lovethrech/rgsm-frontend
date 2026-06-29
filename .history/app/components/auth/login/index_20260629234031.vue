@@ -38,13 +38,13 @@ const submitLoginDetails=()=>{
                 {{formInputAndLabelData.errorMsg}}
             </p>
         </div>
+        <br/>
         <div class="auth-bot-question">
             <input :value="botCheckBoxValue" type="checkbox" name="auth-bot" id="auth-bot" required>
             <label for="auth-bot">
                 I am not a robot
             </label>
         </div>
-        <br/>
         <div class="auth-btn-ctn">
             <button class="auth-btn" type="submit">
                 Login
@@ -62,6 +62,10 @@ const submitLoginDetails=()=>{
     width:100%;
     display: flex;
     flex-direction: column;
+}
+.form-input-and-label-ctn label, .form-input-and-label-error{
+    background-color: #000000;
+    padding: 0.3vh 1vh;
 }
 .form-input-and-label-ctn label{
     width: 22%;
@@ -99,16 +103,15 @@ const submitLoginDetails=()=>{
 }
 .auth-btn{
     background-color: var(--slate-200);
-    color: var(--dark);
+    color: #ffffff;
     font-size: 2vh;
     width: 100%;
     padding: 1vh;
     border:0;
-    transition: all 0.3s ease-in-out;
+    
 }
 .auth-btn:hover{
     cursor: pointer;
     background-color: #000000;
-    color: #ffffff;
 }
 </style>

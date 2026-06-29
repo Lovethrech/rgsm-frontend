@@ -44,7 +44,6 @@ const submitLoginDetails=()=>{
                 I am not a robot
             </label>
         </div>
-        <br/>
         <div class="auth-btn-ctn">
             <button class="auth-btn" type="submit">
                 Login
@@ -62,6 +61,10 @@ const submitLoginDetails=()=>{
     width:100%;
     display: flex;
     flex-direction: column;
+}
+.form-input-and-label-ctn label, .form-input-and-label-error{
+    background-color: #000000;
+    padding: 0.3vh 1vh;
 }
 .form-input-and-label-ctn label{
     width: 22%;

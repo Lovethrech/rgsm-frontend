@@ -29,28 +29,32 @@ const submitLoginDetails=()=>{
 
 <template>
     <form class="auth-login">
-        <div class="form-input-and-label-ctn" v-for="formInputAndLabelData in formInputAndLabelDatas" :key="formInputAndLabelData.id">
+        <div class="form-input-and-label-ctn" v-for="formInputAndLabelData in formInpoutAndLabelDatas" :key="formInputAndLabelData.id">
             <label :for="formInputAndLabelData.name">
-                {{formInputAndLabelData.name}}:*
+                {{name}}:*
             </label>
             <input :value="formInputAndLabelData.value" :name="formInputAndLabelData.name" :type="formInputAndLabelData.nameType" :placeholder="formInputAndLabelData.namePlaceholder" required/>
             <p class="form-input-and-label-error" :style="{display: displayError}">
                 {{formInputAndLabelData.errorMsg}}
             </p>
         </div>
-        <div class="auth-bot-question">
-            <input :value="botCheckBoxValue" type="checkbox" name="auth-bot" id="auth-bot" required>
-            <label for="auth-bot">
-                I am not a robot
-            </label>
-        </div>
-        <br/>
-        <div class="auth-btn-ctn">
-            <button class="auth-btn" type="submit">
-                Login
-            </button>
-        </div>
-        <!-- 
+
+        <!-- <AuthInputAndLabel 
+            :name="formInputAndLabelDatas[0].name"
+            :nameType="formInputAndLabelDatas[0].nameType"
+            :namePlaceholder="formInputAndLabelDatas[0].placeholder"
+            :errorMsg="formInputAndLabelDatas[0].errorMsg"
+            :value="nameValue"
+            :displayError="displayError"
+        />
+        <AuthInputAndLabel 
+            :name="formInputAndLabelDatas[1].name"
+            :nameType="formInputAndLabelDatas[1].nameType"
+            :namePlaceholder="formInputAndLabelDatas[1].placeholder"
+            :errorMsg="formInputAndLabelDatas[1].errorMsg"
+            :value="passwordValue"
+            :displayError="displayError"
+        />
         <br/>
         <AuthBotQ :botCheckBoxValue="botCheckBoxValue"/>
         <AuthLoginButton @click="submitLoginDetails"/> -->
@@ -62,6 +66,10 @@ const submitLoginDetails=()=>{
     width:100%;
     display: flex;
     flex-direction: column;
+}
+.form-input-and-label-ctn label, .form-input-and-label-error{
+    background-color: #000000;
+    padding: 0.3vh 1vh;
 }
 .form-input-and-label-ctn label{
     width: 22%;
@@ -88,27 +96,5 @@ const submitLoginDetails=()=>{
     color: red;
     border-top-left-radius: 2vh;
     border-bottom-left-radius: 2vh;
-}
-.auth-bot-question label{
-    font-size: 1.4vh;
-}
-.auth-btn-ctn{
-    width: 100%;
-    display: flex;
-    justify-content: center;
-}
-.auth-btn{
-    background-color: var(--slate-200);
-    color: var(--dark);
-    font-size: 2vh;
-    width: 100%;
-    padding: 1vh;
-    border:0;
-    transition: all 0.3s ease-in-out;
-}
-.auth-btn:hover{
-    cursor: pointer;
-    background-color: #000000;
-    color: #ffffff;
 }
 </style>

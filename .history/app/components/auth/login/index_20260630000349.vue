@@ -63,6 +63,9 @@ const submitLoginDetails=()=>{
     display: flex;
     flex-direction: column;
 }
+.form-input-and-label-ctn label, .form-input-and-label-error{
+    padding: 0.3vh 1vh;
+}
 .form-input-and-label-ctn label{
     width: 22%;
     font-size: 1.4vh;

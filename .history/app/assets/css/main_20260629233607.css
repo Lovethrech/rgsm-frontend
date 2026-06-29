@@ -49,9 +49,7 @@ html, body {
     color: #e5e5e5;
     font-family: system-ui, -apple-system, sans-serif;
 }
-input{
-    outline:0;
-}
+input
 
 .glass {
     background: var(--glass-bg);

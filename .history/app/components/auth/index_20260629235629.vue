@@ -26,7 +26,6 @@
 .auth-main-title{
     color: #93C5FD; 
     font-weight:900;
-    font-size: 4vh;
 }
 .auth-main-desc{
     color: #9ca3af;

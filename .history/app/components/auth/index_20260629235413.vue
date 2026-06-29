@@ -2,10 +2,11 @@
     <section class="auth-main glass">
         <ChelLogo/>
         <h1 class="auth-main-title">
-            Welcome, Admin
+            Welcome, 
+            Admin
         </h1>
         <p class="auth-main-desc">
-            To access the realtime system dashboard <br/> for monitoring and moderation.
+            To access the realtime system dashboard for monitoring and moderation.
         </p>
         <br/>
         <div class="auth-main-form-ct">
@@ -18,7 +19,6 @@
 .auth-main{
     padding: 3vh;
     margin: 0 3vh;
-    width:40vw;
 }
 .auth-main-title, .auth-main-desc{
     text-align: center;
@@ -26,15 +26,8 @@
 .auth-main-title{
     color: #93C5FD; 
     font-weight:900;
-    font-size: 4vh;
 }
 .auth-main-desc{
     color: #9ca3af;
-}
-
-@media screen and (max-width: 990px) {
-    .auth-main{
-        width: 60vw;
-    }
 }
 </style>

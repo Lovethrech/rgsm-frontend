@@ -18,7 +18,7 @@
 .auth-main{
     padding: 3vh;
     margin: 0 3vh;
-    width:40vw;
+    width:40vh;
 }
 .auth-main-title, .auth-main-desc{
     text-align: center;
@@ -26,15 +26,8 @@
 .auth-main-title{
     color: #93C5FD; 
     font-weight:900;
-    font-size: 4vh;
 }
 .auth-main-desc{
     color: #9ca3af;
-}
-
-@media screen and (max-width: 990px) {
-    .auth-main{
-        width: 60vw;
-    }
 }
 </style>
