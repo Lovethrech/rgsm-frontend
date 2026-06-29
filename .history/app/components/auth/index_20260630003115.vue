@@ -4,17 +4,7 @@ const authMainDesc=ref("To access the realtime system dashboard for monitoring a
 
 const showSignUp=ref(false);
 
-const toggleSignUp=()=>{
-    showSignUp.value=!showSignUp.value;
-    if (showSignUp.value){
-        authMainTitle.value="Welcome, New User";
-        authMainDesc.value="To access the realtime system dashboard for monitoring and moderation, please sign up.";
-    } 
-    else {
-        authMainTitle.value="Welcome, Admin";
-        authMainDesc.value="To access the realtime system dashboard for monitoring and moderation.";
-    }
-}
+const
 </script>
 
 <template>
@@ -35,7 +25,7 @@ const toggleSignUp=()=>{
             <span class="auth-question">
                 Don't have an account yet?
             </span>
-            <div @click="toggleSignUp" class="auth-question-link-ctn"> 
+            <div @click="showSignUp"> 
                 <span class='auth-question-link'>
                     Sign up
                 </span>

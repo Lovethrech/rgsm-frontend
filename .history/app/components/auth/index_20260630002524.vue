@@ -1,45 +1,29 @@
 <script setup>
-const authMainTitle=ref("Welcome, Admin");
-const authMainDesc=ref("To access the realtime system dashboard for monitoring and moderation.");
-
-const showSignUp=ref(false);
-
-const toggleSignUp=()=>{
-    showSignUp.value=!showSignUp.value;
-    if (showSignUp.value){
-        authMainTitle.value="Welcome, New User";
-        authMainDesc.value="To access the realtime system dashboard for monitoring and moderation, please sign up.";
-    } 
-    else {
-        authMainTitle.value="Welcome, Admin";
-        authMainDesc.value="To access the realtime system dashboard for monitoring and moderation.";
-    }
-}
+const authForm = ref('aulogin');
 </script>
 
 <template>
     <section class="auth-main glass">
         <ChelLogo/>
         <h1 class="auth-main-title">
-            {{authMainTitle}}
+            Welcome, Admin
         </h1>
         <p class="auth-main-desc">
-            {{authMainDesc}}
+            To access the realtime system dashboard <br/> for monitoring and moderation.
         </p>
         <br/>
-        <div class="auth-main-form-ct">
+        <div class="auth-main-form-ct" v-html="">
             <AuthLogin/>
-            <AuthSignUp v-if="showSignUp"/>
         </div>
         <div class="auth-question-ctn">
             <span class="auth-question">
                 Don't have an account yet?
             </span>
-            <div @click="toggleSignUp" class="auth-question-link-ctn"> 
+            <NuxtLink to='/signup'> 
                 <span class='auth-question-link'>
                     Sign up
                 </span>
-            </div>
+            </NuxtLink>
         </div>
         <div class="fine-print">
             By continuing, you agree to the Terms<br />

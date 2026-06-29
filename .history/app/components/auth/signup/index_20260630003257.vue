@@ -47,7 +47,7 @@ const submitLoginDetails=()=>{
         <br/>
         <div class="auth-btn-ctn">
             <button class="auth-btn" type="submit">
-                Create Account
+                Create A
             </button>
         </div>
     </form>

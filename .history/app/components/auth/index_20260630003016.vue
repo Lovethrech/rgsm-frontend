@@ -3,18 +3,6 @@ const authMainTitle=ref("Welcome, Admin");
 const authMainDesc=ref("To access the realtime system dashboard for monitoring and moderation.");
 
 const showSignUp=ref(false);
-
-const toggleSignUp=()=>{
-    showSignUp.value=!showSignUp.value;
-    if (showSignUp.value){
-        authMainTitle.value="Welcome, New User";
-        authMainDesc.value="To access the realtime system dashboard for monitoring and moderation, please sign up.";
-    } 
-    else {
-        authMainTitle.value="Welcome, Admin";
-        authMainDesc.value="To access the realtime system dashboard for monitoring and moderation.";
-    }
-}
 </script>
 
 <template>
@@ -28,18 +16,17 @@ const toggleSignUp=()=>{
         </p>
         <br/>
         <div class="auth-main-form-ct">
-            <AuthLogin/>
-            <AuthSignUp v-if="showSignUp"/>
+            <AuthLogin/>\
         </div>
         <div class="auth-question-ctn">
             <span class="auth-question">
                 Don't have an account yet?
             </span>
-            <div @click="toggleSignUp" class="auth-question-link-ctn"> 
+            <NuxtLink to='/signup'> 
                 <span class='auth-question-link'>
                     Sign up
                 </span>
-            </div>
+            </NuxtLink>
         </div>
         <div class="fine-print">
             By continuing, you agree to the Terms<br />

@@ -35,7 +35,7 @@ const toggleSignUp=()=>{
             <span class="auth-question">
                 Don't have an account yet?
             </span>
-            <div @click="toggleSignUp" class="auth-question-link-ctn"> 
+            <div @click="showSignUp"> 
                 <span class='auth-question-link'>
                     Sign up
                 </span>

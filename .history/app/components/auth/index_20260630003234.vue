@@ -29,7 +29,7 @@ const toggleSignUp=()=>{
         <br/>
         <div class="auth-main-form-ct">
             <AuthLogin/>
-            <AuthSignUp v-if="showSignUp"/>
+            <Auth
         </div>
         <div class="auth-question-ctn">
             <span class="auth-question">
