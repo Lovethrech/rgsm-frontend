@@ -3,7 +3,7 @@
     --purple:#6D28D9;
     --blue:#0a0a0a;
     --dark:#0F172A;
-    --glass-bg: #ffffff14;
+    -
 
     /* ---- Extended ramps ---- */
     --purple-300:#C4B5FD;
@@ -51,7 +51,7 @@ html, body {
 }
 
 .glass {
-    background: var(--glass-bg);
+    background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 20px;

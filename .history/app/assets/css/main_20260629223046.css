@@ -3,7 +3,6 @@
     --purple:#6D28D9;
     --blue:#0a0a0a;
     --dark:#0F172A;
-    --glass-bg: #ffffff14;
 
     /* ---- Extended ramps ---- */
     --purple-300:#C4B5FD;
@@ -15,6 +14,11 @@
     --blue-500:#3B82F6;
     --blue-700:#1D4ED8;
     --blue-900:#1E3A8A;
+
+    --pink-300:#F9A8D4;
+    --pink-500:#EC4899;
+    --pink-700:#BE185D;
+    --pink-900:#831843;
 
     --slate-50:#F8FAFC;
     --slate-200:#E2E8F0;
@@ -45,13 +49,13 @@
 html, body {
     width: 100%;
     height: 100%;
-    background:var(--blue);
+    background: #0a0a0a;
     color: #e5e5e5;
     font-family: system-ui, -apple-system, sans-serif;
 }
 
 .glass {
-    background: var(--glass-bg);
+    background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 20px;
