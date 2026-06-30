@@ -32,22 +32,22 @@ const submitLoginDetails = async () => {
     }
 
     const { data: profile, error: profileError } = await supabase
-    .from('profiles')
-    .select('id, role, requested_role, account_status, organization_id, hostel_id')
-    .eq('id', data.user.id)
-    .single()
+  .from('profiles')
+  .select('id, role, requested_role, account_status, organization_id, hostel_id')
+  .eq('id', data.user.id)
+  .single()
 
-    if (profileError) {
-    errorMsg.value = profileError.message
-    return
-    }
+if (profileError) {
+  errorMsg.value = profileError.message
+  return
+}
 
-    if (profile.account_status !== 'approved') {
-    errorMsg.value = 'Your account is pending approval. Please contact the system administrator.'
-    return
-    }
+if (profile.account_status !== 'approved') {
+  errorMsg.value = 'Your account is pending approval. Please contact the system administrator.'
+  return
+}
 
-    router.push('/dashboard')
+router.push('/dashboard')
 }
 </script>
 
