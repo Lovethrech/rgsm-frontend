@@ -13,6 +13,7 @@ useHead({
 .auth{
     width: 100%;
     min-height: 100vh;
+    padding: 5vh 0;
     line-height: 2;
     background: url("../assets/LandingPagePattern.svg") center/auto no-repeat;
     background-size: cover;
