@@ -67,7 +67,6 @@ input{
 
 
 /* AUTH LOGIN AND SIGNUP STYLES */
-/* START */
 .form-input-and-label-ctn{
     width:100%;
     display: flex;
@@ -121,4 +120,3 @@ input{
     background-color: #000000;
     color: #ffffff;
 }
-/* END */

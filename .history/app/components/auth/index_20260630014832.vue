@@ -77,7 +77,6 @@ const toggleSignUp = () => {
 .auth-main-desc {
     color: #9ca3af;
     font-family: var(--mono-font);
-    font-size: 1.8vh;
 }
 
 .auth-question-ctn {
@@ -110,22 +109,12 @@ const toggleSignUp = () => {
         width: 60vw;
     }
     .auth-main-title {
-        font-size: 3.5vh;
-    }
-    .auth-main-desc {
-        font-size: 1.6vh;
-    }
+
 }
 
 @media screen and (max-width: 650px) {
     .auth-main {
         width: 90vw;
-    }
-    .auth-main-title {
-        font-size: 3vh;
-    }
-    .auth-main-desc {
-        font-size: 1.4vh;
     }
 }
 </style>

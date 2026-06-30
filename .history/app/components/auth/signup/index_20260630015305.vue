@@ -13,66 +13,66 @@ const errorMsg = ref('')
 const successMsg = ref('')
 
 const roles = [
-    {
-        label: 'Global Admin',
-        value: 'global_admin',
-        description: 'Full access across all organizations. Requires approval.'
-    },
-    {
-        label: 'University Admin',
-        value: 'university_admin',
-        description: 'Manages one university or organization.'
-    },
-    {
-        label: 'Bilateral Admin',
-        value: 'bilateral_admin',
-        description: 'Higher hostel-level access, including appointed hostel logs.'
-    },
-    {
-        label: 'Unilateral Admin',
-        value: 'unilateral_admin',
-        description: 'Hostel representative / limited assigned-hostel access.'
+  {
+    label: 'Global Admin',
+    value: 'global_admin',
+    description: 'Full access across all organizations. Requires approval.'
+  },
+  {
+    label: 'University Admin',
+    value: 'university_admin',
+    description: 'Manages one university or organization.'
+  },
+  {
+    label: 'Bilateral Admin',
+    value: 'bilateral_admin',
+    description: 'Higher hostel-level access, including appointed hostel logs.'
+  },
+  {
+    label: 'Unilateral Admin',
+    value: 'unilateral_admin',
+    description: 'Hostel representative / limited assigned-hostel access.'
+  }
+]
+
+const submitSignUpDetails = async () => {
+  errorMsg.value = ''
+  successMsg.value = ''
+
+  if (!email.value || !password.value || !requestedRole.value || !botChecked.value) {
+    errorMsg.value = 'Please fill all required fields and confirm you are not a robot.'
+    return
+  }
+
+  if (password.value.length < 6) {
+    errorMsg.value = 'Password must be at least 6 characters.'
+    return
+  }
+
+  loading.value = true
+
+  const { data, error } = await supabase.auth.signUp({
+    email: email.value,
+    password: password.value,
+    options: {
+      data: {
+        full_name: fullName.value,
+        requested_role: requestedRole.value
+      }
     }
-    ]
+  })
 
-    const submitSignUpDetails = async () => {
-    errorMsg.value = ''
-    successMsg.value = ''
+  loading.value = false
 
-    if (!email.value || !password.value || !requestedRole.value || !botChecked.value) {
-        errorMsg.value = 'Please fill all required fields and confirm you are not a robot.'
-        return
-    }
+  if (error) {
+    errorMsg.value = error.message
+    return
+  }
 
-    if (password.value.length < 6) {
-        errorMsg.value = 'Password must be at least 6 characters.'
-        return
-    }
+  successMsg.value =
+    'Account created. Please check your email for confirmation. Your role will remain pending until approved.'
 
-    loading.value = true
-
-    const { data, error } = await supabase.auth.signUp({
-        email: email.value,
-        password: password.value,
-        options: {
-        data: {
-            full_name: fullName.value,
-            requested_role: requestedRole.value
-        }
-        }
-    })
-
-    loading.value = false
-
-    if (error) {
-        errorMsg.value = error.message
-        return
-    }
-
-    successMsg.value =
-        'Account created. Please check your email for confirmation. Your role will remain pending until approved.'
-
-    console.log('Signup data:', data)
+  console.log('Signup data:', data)
 }
 </script>
 

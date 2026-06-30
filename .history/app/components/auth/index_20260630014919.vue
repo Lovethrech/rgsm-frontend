@@ -112,9 +112,7 @@ const toggleSignUp = () => {
     .auth-main-title {
         font-size: 3.5vh;
     }
-    .auth-main-desc {
-        font-size: 1.6vh;
-    }
+    .au
 }
 
 @media screen and (max-width: 650px) {
@@ -123,9 +121,6 @@ const toggleSignUp = () => {
     }
     .auth-main-title {
         font-size: 3vh;
-    }
-    .auth-main-desc {
-        font-size: 1.4vh;
     }
 }
 </style>

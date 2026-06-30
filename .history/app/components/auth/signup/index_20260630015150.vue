@@ -13,66 +13,66 @@ const errorMsg = ref('')
 const successMsg = ref('')
 
 const roles = [
-    {
-        label: 'Global Admin',
-        value: 'global_admin',
-        description: 'Full access across all organizations. Requires approval.'
-    },
-    {
-        label: 'University Admin',
-        value: 'university_admin',
-        description: 'Manages one university or organization.'
-    },
-    {
-        label: 'Bilateral Admin',
-        value: 'bilateral_admin',
-        description: 'Higher hostel-level access, including appointed hostel logs.'
-    },
-    {
-        label: 'Unilateral Admin',
-        value: 'unilateral_admin',
-        description: 'Hostel representative / limited assigned-hostel access.'
+  {
+    label: 'Global Admin',
+    value: 'global_admin',
+    description: 'Full access across all organizations. Requires approval.'
+  },
+  {
+    label: 'University Admin',
+    value: 'university_admin',
+    description: 'Manages one university or organization.'
+  },
+  {
+    label: 'Bilateral Admin',
+    value: 'bilateral_admin',
+    description: 'Higher hostel-level access, including appointed hostel logs.'
+  },
+  {
+    label: 'Unilateral Admin',
+    value: 'unilateral_admin',
+    description: 'Hostel representative / limited assigned-hostel access.'
+  }
+]
+
+const submitSignUpDetails = async () => {
+  errorMsg.value = ''
+  successMsg.value = ''
+
+  if (!email.value || !password.value || !requestedRole.value || !botChecked.value) {
+    errorMsg.value = 'Please fill all required fields and confirm you are not a robot.'
+    return
+  }
+
+  if (password.value.length < 6) {
+    errorMsg.value = 'Password must be at least 6 characters.'
+    return
+  }
+
+  loading.value = true
+
+  const { data, error } = await supabase.auth.signUp({
+    email: email.value,
+    password: password.value,
+    options: {
+      data: {
+        full_name: fullName.value,
+        requested_role: requestedRole.value
+      }
     }
-    ]
+  })
 
-    const submitSignUpDetails = async () => {
-    errorMsg.value = ''
-    successMsg.value = ''
+  loading.value = false
 
-    if (!email.value || !password.value || !requestedRole.value || !botChecked.value) {
-        errorMsg.value = 'Please fill all required fields and confirm you are not a robot.'
-        return
-    }
+  if (error) {
+    errorMsg.value = error.message
+    return
+  }
 
-    if (password.value.length < 6) {
-        errorMsg.value = 'Password must be at least 6 characters.'
-        return
-    }
+  successMsg.value =
+    'Account created. Please check your email for confirmation. Your role will remain pending until approved.'
 
-    loading.value = true
-
-    const { data, error } = await supabase.auth.signUp({
-        email: email.value,
-        password: password.value,
-        options: {
-        data: {
-            full_name: fullName.value,
-            requested_role: requestedRole.value
-        }
-        }
-    })
-
-    loading.value = false
-
-    if (error) {
-        errorMsg.value = error.message
-        return
-    }
-
-    successMsg.value =
-        'Account created. Please check your email for confirmation. Your role will remain pending until approved.'
-
-    console.log('Signup data:', data)
+  console.log('Signup data:', data)
 }
 </script>
 
@@ -163,6 +163,8 @@ const roles = [
 </template>
 
 <style scoped>
+
+.form-input-and-label-ctn input,
 .form-input-and-label-ctn select {
     font-size: 2vh;
     padding: 1vh;
@@ -183,4 +185,41 @@ const roles = [
     color: #93c5fd;
     font-size: 1.4vh;
 }
-</style>
+
+.form-input-and-label-error {
+    font-size: 1.4vh;
+    color: #f87171;
+}
+
+.form-success {
+    font-size: 1.4vh;
+    color: #86efac;
+}
+
+.auth-bot-question label {
+    font-size: 1.4vh;
+}
+
+.auth-btn-ctn {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.auth-btn {
+    background-color: var(--slate-200);
+    color: var(--dark);
+    font-size: 2vh;
+    width: 100%;
+    padding: 1vh;
+    border: 0;
+    transition: all 0.3s ease-in-out;
+}
+
+.auth-btn:hover {
+    cursor: pointer;
+    background-color: #000000;
+    color: #ffffff;
+}
+
+</

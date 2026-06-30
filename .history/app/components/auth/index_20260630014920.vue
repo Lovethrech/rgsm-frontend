@@ -124,8 +124,5 @@ const toggleSignUp = () => {
     .auth-main-title {
         font-size: 3vh;
     }
-    .auth-main-desc {
-        font-size: 1.4vh;
-    }
 }
 </style>
