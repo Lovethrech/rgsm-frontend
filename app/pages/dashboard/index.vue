@@ -247,7 +247,7 @@ const subscribeToRealtime = () => {
         event: '*',
         schema: 'public',
         table: 'alerts'
-      }
+      },
       (payload) => {
         console.log('Realtime alert:', payload)
 
