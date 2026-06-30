@@ -155,9 +155,9 @@ const submitSignUpDetails = async () => {
         <br />
 
         <div class="auth-btn-ctn">
-            <button class="auth-btn" type="submit" :disabled="loading">
-                {{ loading ? 'Creating Account...' : 'Create Account' }}
-            </button>
+        <button class="auth-btn" type="submit" :disabled="loading">
+            {{ loading ? 'Creating Account...' : 'Create Account' }}
+        </button>
         </div>
     </form>
 </template>

@@ -114,34 +114,34 @@ const submitSignUpDetails = async () => {
         </div>
 
         <div class="form-input-and-label-ctn">
-            <label for="role">Role:*</label>
-            <select id="role" v-model="requestedRole" required>
-                <option disabled value="">Select your role</option>
-                <option
-                v-for="role in roles"
-                :key="role.value"
-                :value="role.value"
-                >
-                {{ role.label }}
-                </option>
-            </select>
+        <label for="role">Role:*</label>
+        <select id="role" v-model="requestedRole" required>
+            <option disabled value="">Select your role</option>
+            <option
+            v-for="role in roles"
+            :key="role.value"
+            :value="role.value"
+            >
+            {{ role.label }}
+            </option>
+        </select>
 
-            <p v-if="requestedRole" class="role-help">
-                {{ roles.find((role) => role.value === requestedRole)?.description }}
-            </p>
+        <p v-if="requestedRole" class="role-help">
+            {{ roles.find((role) => role.value === requestedRole)?.description }}
+        </p>
         </div>
 
         <div class="auth-bot-question">
-            <input
-                v-model="botChecked"
-                type="checkbox"
-                name="auth-bot"
-                id="auth-bot-signup"
-                required
-            />
-            <label for="auth-bot-signup">
-                I am not a robot
-            </label>
+        <input
+            v-model="botChecked"
+            type="checkbox"
+            name="auth-bot"
+            id="auth-bot-signup"
+            required
+        />
+        <label for="auth-bot-signup">
+            I am not a robot
+        </label>
         </div>
 
         <p v-if="errorMsg" class="form-input-and-label-error">
@@ -155,9 +155,9 @@ const submitSignUpDetails = async () => {
         <br />
 
         <div class="auth-btn-ctn">
-            <button class="auth-btn" type="submit" :disabled="loading">
-                {{ loading ? 'Creating Account...' : 'Create Account' }}
-            </button>
+        <button class="auth-btn" type="submit" :disabled="loading">
+            {{ loading ? 'Creating Account...' : 'Create Account' }}
+        </button>
         </div>
     </form>
 </template>

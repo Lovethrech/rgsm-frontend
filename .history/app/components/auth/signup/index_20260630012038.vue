@@ -79,69 +79,69 @@ const submitSignUpDetails = async () => {
 <template>
     <form class="auth-login" @submit.prevent="submitSignUpDetails">
         <div class="form-input-and-label-ctn">
-            <label for="fullName">Full Name</label>
-            <input
-                id="fullName"
-                v-model="fullName"
-                name="fullName"
-                type="text"
-                placeholder="Your full name"
-            />
+        <label for="fullName">Full Name</label>
+        <input
+            id="fullName"
+            v-model="fullName"
+            name="fullName"
+            type="text"
+            placeholder="Your full name"
+        />
         </div>
 
         <div class="form-input-and-label-ctn">
-            <label for="signupEmail">Email:*</label>
-            <input
-                id="signupEmail"
-                v-model="email"
-                name="email"
-                type="email"
-                placeholder="Your Email"
-                required
-            />
+        <label for="signupEmail">Email:*</label>
+        <input
+            id="signupEmail"
+            v-model="email"
+            name="email"
+            type="email"
+            placeholder="Your Email"
+            required
+        />
         </div>
 
         <div class="form-input-and-label-ctn">
-            <label for="signupPassword">Password:*</label>
-            <input
-                id="signupPassword"
-                v-model="password"
-                name="password"
-                type="password"
-                placeholder="***************"
-                required
-            />
+        <label for="signupPassword">Password:*</label>
+        <input
+            id="signupPassword"
+            v-model="password"
+            name="password"
+            type="password"
+            placeholder="***************"
+            required
+        />
         </div>
 
         <div class="form-input-and-label-ctn">
-            <label for="role">Role:*</label>
-            <select id="role" v-model="requestedRole" required>
-                <option disabled value="">Select your role</option>
-                <option
-                v-for="role in roles"
-                :key="role.value"
-                :value="role.value"
-                >
-                {{ role.label }}
-                </option>
-            </select>
+        <label for="role">Role:*</label>
+        <select id="role" v-model="requestedRole" required>
+            <option disabled value="">Select your role</option>
+            <option
+            v-for="role in roles"
+            :key="role.value"
+            :value="role.value"
+            >
+            {{ role.label }}
+            </option>
+        </select>
 
-            <p v-if="requestedRole" class="role-help">
-                {{ roles.find((role) => role.value === requestedRole)?.description }}
-            </p>
+        <p v-if="requestedRole" class="role-help">
+            {{ roles.find((role) => role.value === requestedRole)?.description }}
+        </p>
         </div>
 
         <div class="auth-bot-question">
-            <input
-                v-model="botChecked"
-                type="checkbox"
-                name="auth-bot"
-                id="auth-bot-signup"
-                required
-            />
-            <label for="auth-bot-signup">
-                I am not a robot
-            </label>
+        <input
+            v-model="botChecked"
+            type="checkbox"
+            name="auth-bot"
+            id="auth-bot-signup"
+            required
+        />
+        <label for="auth-bot-signup">
+            I am not a robot
+        </label>
         </div>
 
         <p v-if="errorMsg" class="form-input-and-label-error">
@@ -155,9 +155,9 @@ const submitSignUpDetails = async () => {
         <br />
 
         <div class="auth-btn-ctn">
-            <button class="auth-btn" type="submit" :disabled="loading">
-                {{ loading ? 'Creating Account...' : 'Create Account' }}
-            </button>
+        <button class="auth-btn" type="submit" :disabled="loading">
+            {{ loading ? 'Creating Account...' : 'Create Account' }}
+        </button>
         </div>
     </form>
 </template>

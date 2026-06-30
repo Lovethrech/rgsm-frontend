@@ -132,16 +132,16 @@ const submitSignUpDetails = async () => {
         </div>
 
         <div class="auth-bot-question">
-            <input
-                v-model="botChecked"
-                type="checkbox"
-                name="auth-bot"
-                id="auth-bot-signup"
-                required
-            />
-            <label for="auth-bot-signup">
-                I am not a robot
-            </label>
+        <input
+            v-model="botChecked"
+            type="checkbox"
+            name="auth-bot"
+            id="auth-bot-signup"
+            required
+        />
+        <label for="auth-bot-signup">
+            I am not a robot
+        </label>
         </div>
 
         <p v-if="errorMsg" class="form-input-and-label-error">
@@ -155,9 +155,9 @@ const submitSignUpDetails = async () => {
         <br />
 
         <div class="auth-btn-ctn">
-            <button class="auth-btn" type="submit" :disabled="loading">
-                {{ loading ? 'Creating Account...' : 'Create Account' }}
-            </button>
+        <button class="auth-btn" type="submit" :disabled="loading">
+            {{ loading ? 'Creating Account...' : 'Create Account' }}
+        </button>
         </div>
     </form>
 </template>

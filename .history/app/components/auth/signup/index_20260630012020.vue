@@ -77,96 +77,96 @@ const submitSignUpDetails = async () => {
 </script>
 
 <template>
-    <form class="auth-login" @submit.prevent="submitSignUpDetails">
-        <div class="form-input-and-label-ctn">
-            <label for="fullName">Full Name</label>
-            <input
-                id="fullName"
-                v-model="fullName"
-                name="fullName"
-                type="text"
-                placeholder="Your full name"
-            />
-        </div>
+  <form class="auth-login" @submit.prevent="submitSignUpDetails">
+    <div class="form-input-and-label-ctn">
+      <label for="fullName">Full Name</label>
+      <input
+        id="fullName"
+        v-model="fullName"
+        name="fullName"
+        type="text"
+        placeholder="Your full name"
+      />
+    </div>
 
-        <div class="form-input-and-label-ctn">
-            <label for="signupEmail">Email:*</label>
-            <input
-                id="signupEmail"
-                v-model="email"
-                name="email"
-                type="email"
-                placeholder="Your Email"
-                required
-            />
-        </div>
+    <div class="form-input-and-label-ctn">
+      <label for="signupEmail">Email:*</label>
+      <input
+        id="signupEmail"
+        v-model="email"
+        name="email"
+        type="email"
+        placeholder="Your Email"
+        required
+      />
+    </div>
 
-        <div class="form-input-and-label-ctn">
-            <label for="signupPassword">Password:*</label>
-            <input
-                id="signupPassword"
-                v-model="password"
-                name="password"
-                type="password"
-                placeholder="***************"
-                required
-            />
-        </div>
+    <div class="form-input-and-label-ctn">
+      <label for="signupPassword">Password:*</label>
+      <input
+        id="signupPassword"
+        v-model="password"
+        name="password"
+        type="password"
+        placeholder="***************"
+        required
+      />
+    </div>
 
-        <div class="form-input-and-label-ctn">
-            <label for="role">Role:*</label>
-            <select id="role" v-model="requestedRole" required>
-                <option disabled value="">Select your role</option>
-                <option
-                v-for="role in roles"
-                :key="role.value"
-                :value="role.value"
-                >
-                {{ role.label }}
-                </option>
-            </select>
+    <div class="form-input-and-label-ctn">
+      <label for="role">Role:*</label>
+      <select id="role" v-model="requestedRole" required>
+        <option disabled value="">Select your role</option>
+        <option
+          v-for="role in roles"
+          :key="role.value"
+          :value="role.value"
+        >
+          {{ role.label }}
+        </option>
+      </select>
 
-            <p v-if="requestedRole" class="role-help">
-                {{ roles.find((role) => role.value === requestedRole)?.description }}
-            </p>
-        </div>
+      <p v-if="requestedRole" class="role-help">
+        {{ roles.find((role) => role.value === requestedRole)?.description }}
+      </p>
+    </div>
 
-        <div class="auth-bot-question">
-            <input
-                v-model="botChecked"
-                type="checkbox"
-                name="auth-bot"
-                id="auth-bot-signup"
-                required
-            />
-            <label for="auth-bot-signup">
-                I am not a robot
-            </label>
-        </div>
+    <div class="auth-bot-question">
+      <input
+        v-model="botChecked"
+        type="checkbox"
+        name="auth-bot"
+        id="auth-bot-signup"
+        required
+      />
+      <label for="auth-bot-signup">
+        I am not a robot
+      </label>
+    </div>
 
-        <p v-if="errorMsg" class="form-input-and-label-error">
-        {{ errorMsg }}
-        </p>
+    <p v-if="errorMsg" class="form-input-and-label-error">
+      {{ errorMsg }}
+    </p>
 
-        <p v-if="successMsg" class="form-success">
-        {{ successMsg }}
-        </p>
+    <p v-if="successMsg" class="form-success">
+      {{ successMsg }}
+    </p>
 
-        <br />
+    <br />
 
-        <div class="auth-btn-ctn">
-            <button class="auth-btn" type="submit" :disabled="loading">
-                {{ loading ? 'Creating Account...' : 'Create Account' }}
-            </button>
-        </div>
-    </form>
+    <div class="auth-btn-ctn">
+      <button class="auth-btn" type="submit" :disabled="loading">
+        {{ loading ? 'Creating Account...' : 'Create Account' }}
+      </button>
+    </div>
+  </form>
 </template>
 
 <style scoped>
 .form-input-and-label-ctn {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .form-input-and-label-ctn label {

@@ -1,11 +1,6 @@
-export default defineNuxtRouteMiddleware(async (to) => {
-    const publicRoutes = ['/', '/login', '/auth']
+export default defineNuxtRouteMiddleware(async () => {
     const supabase = useSupabaseClient()
     const user = useSupabaseUser()
-
-    if (publicRoutes.includes(to.path)) {
-        return
-    }
 
     if (!user.value) {
         return navigateTo('/auth')
@@ -18,7 +13,10 @@ export default defineNuxtRouteMiddleware(async (to) => {
         .single()
 
     if (!profile || profile.account_status !== 'approved') {
-        await supabase.auth.signOut()
         return navigateTo('/auth')
+    }
+
+    if (profile.role !== 'global_admin') {
+        return navigateTo('/dashboard')
     }
 })
