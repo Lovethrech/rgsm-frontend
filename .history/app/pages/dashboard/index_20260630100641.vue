@@ -185,12 +185,6 @@ const loadDashboardData = async () => {
     detectionEvents.value = detectionEventsResponse.data || []
   }
 
-  console.log('Loaded detection events:', detectionEventsResponse)
-  console.log('Loaded access logs:', accessLogsResponse)
-  console.log('Loaded alerts:', alertsResponse)
-
-
-
   if (!accessLogsResponse.error) {
     accessLogs.value = accessLogsResponse.data || []
   }
