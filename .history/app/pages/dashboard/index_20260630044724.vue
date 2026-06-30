@@ -300,7 +300,7 @@ onUnmounted(async () => {
         }"
         >
         <div class="sidebar-brand">
-            <ChelLogo />
+            <AppLogo class="brand-mark" />
         </div>
 
         <nav class="sidebar-nav">

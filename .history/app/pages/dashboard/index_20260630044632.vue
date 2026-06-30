@@ -300,7 +300,12 @@ onUnmounted(async () => {
         }"
         >
         <div class="sidebar-brand">
-            <ChelLogo />
+            <div class="brand-mark">R</div>
+
+            <div v-if="!sidebarCollapsed" class="brand-text">
+            <h2>RGSM</h2>
+            <span>Security Model</span>
+            </div>
         </div>
 
         <nav class="sidebar-nav">

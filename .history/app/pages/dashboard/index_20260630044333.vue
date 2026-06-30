@@ -285,448 +285,453 @@ onUnmounted(async () => {
 </script>
 
 <template>
-    <main class="dashboard-shell">
-        <div
-        class="mobile-overlay"
-        :class="{ 'mobile-overlay-active': sidebarOpen }"
-        @click="closeMobileSidebar"
-        />
+  <main class="dashboard-shell">
+    <div
+      class="mobile-overlay"
+      :class="{ 'mobile-overlay-active': sidebarOpen }"
+      @click="closeMobileSidebar"
+    />
 
-        <aside
-        class="dashboard-sidebar"
-        :class="{
-            'sidebar-open': sidebarOpen,
-            'sidebar-collapsed': sidebarCollapsed
-        }"
+    <aside
+      class="dashboard-sidebar"
+      :class="{
+        'sidebar-open': sidebarOpen,
+        'sidebar-collapsed': sidebarCollapsed
+      }"
+    >
+      <div class="sidebar-brand">
+        <div class="brand-mark">R</div>
+
+        <div v-if="!sidebarCollapsed" class="brand-text">
+          <h2>RGSM</h2>
+          <span>Security Model</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button
+          v-for="item in navItems"
+          :key="item.id"
+          type="button"
+          class="nav-item"
+          :class="{ 'nav-item-active': activeSection === item.id }"
+          @click="setSection(item.id)"
         >
-        <div class="sidebar-brand">
-            <ChelLogo />
+          <span class="nav-icon">{{ item.icon }}</span>
+          <span v-if="!sidebarCollapsed" class="nav-label">{{ item.label }}</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button
+          type="button"
+          class="collapse-btn desktop-only"
+          @click="sidebarCollapsed = !sidebarCollapsed"
+        >
+          {{ sidebarCollapsed ? '→' : '← Collapse' }}
+        </button>
+
+        <button type="button" class="logout-btn" @click="logout">
+          <span>↪</span>
+          <span v-if="!sidebarCollapsed">Logout</span>
+        </button>
+      </div>
+    </aside>
+
+    <section class="dashboard-main" :class="{ 'main-expanded': sidebarCollapsed }">
+      <header class="dashboard-topbar">
+        <button type="button" class="mobile-menu-btn" @click="sidebarOpen = true">
+          ☰
+        </button>
+
+        <div>
+          <p class="eyebrow">Realtime Campus Security</p>
+          <h1>{{ sectionTitle }}</h1>
         </div>
 
-        <nav class="sidebar-nav">
-            <button
-            v-for="item in navItems"
-            :key="item.id"
-            type="button"
-            class="nav-item"
-            :class="{ 'nav-item-active': activeSection === item.id }"
-            @click="setSection(item.id)"
-            >
-            <span class="nav-icon">{{ item.icon }}</span>
-            <span v-if="!sidebarCollapsed" class="nav-label">{{ item.label }}</span>
-            </button>
-        </nav>
+        <div class="topbar-right">
+          <div class="live-pill">
+            <span class="pulse-dot"></span>
+            Live
+          </div>
 
-        <div class="sidebar-footer">
-            <button
-            type="button"
-            class="collapse-btn desktop-only"
-            @click="sidebarCollapsed = !sidebarCollapsed"
-            >
-            {{ sidebarCollapsed ? '→' : '← Collapse' }}
-            </button>
+          <div class="profile-chip">
+            <span class="profile-avatar">
+              {{ profile?.full_name?.charAt(0) || profile?.email?.charAt(0) || 'A' }}
+            </span>
 
-            <button type="button" class="logout-btn" @click="logout">
-            <span>↪</span>
-            <span v-if="!sidebarCollapsed">Logout</span>
-            </button>
+            <div class="profile-meta">
+              <strong>{{ profile?.full_name || 'Admin User' }}</strong>
+              <small>{{ profile?.role || 'admin' }}</small>
+            </div>
+          </div>
         </div>
-        </aside>
+      </header>
 
-        <section class="dashboard-main" :class="{ 'main-expanded': sidebarCollapsed }">
-        <header class="dashboard-topbar">
-            <button type="button" class="mobile-menu-btn" @click="sidebarOpen = true">
-            ☰
-            </button>
+      <section v-if="loading" class="state-card">
+        <div class="loader"></div>
+        <p>Loading RGSM dashboard...</p>
+      </section>
 
-            <div>
-            <p class="eyebrow">Realtime Campus Security</p>
-            <h1>{{ sectionTitle }}</h1>
-            </div>
+      <section v-else-if="authError" class="state-card error-state">
+        <h2>Access Restricted</h2>
+        <p>{{ authError }}</p>
+        <button type="button" @click="logout">Return to Login</button>
+      </section>
 
-            <div class="topbar-right">
-            <div class="live-pill">
-                <span class="pulse-dot"></span>
-                Live
-            </div>
-
-            <div class="profile-chip">
-                <span class="profile-avatar">
-                {{ profile?.full_name?.charAt(0) || profile?.email?.charAt(0) || 'A' }}
-                </span>
-
-                <div class="profile-meta">
-                <strong>{{ profile?.full_name || 'Admin User' }}</strong>
-                <small>{{ profile?.role || 'admin' }}</small>
-                </div>
-            </div>
-            </div>
-        </header>
-
-        <section v-if="loading" class="state-card">
-            <div class="loader"></div>
-            <p>Loading RGSM dashboard...</p>
-        </section>
-
-        <section v-else-if="authError" class="state-card error-state">
-            <h2>Access Restricted</h2>
-            <p>{{ authError }}</p>
-            <button type="button" @click="logout">Return to Login</button>
-        </section>
-
-        <section v-else class="dashboard-content">
-            <template v-if="activeSection === 'dashboard'">
-            <div class="stats-grid">
-                <article class="stat-card">
-                <span>Total RFID Events</span>
-                <strong>{{ detectionEvents.length }}</strong>
-                <small>Latest simulation reads</small>
-                </article>
-
-                <article class="stat-card">
-                <span>Active Alerts</span>
-                <strong>{{ activeAlerts.length }}</strong>
-                <small>{{ criticalAlerts.length }} critical</small>
-                </article>
-
-                <article class="stat-card">
-                <span>Geofence Zones</span>
-                <strong>{{ geofences.length }}</strong>
-                <small>Logical RFID zones</small>
-                </article>
-
-                <article class="stat-card">
-                <span>RFID Readers</span>
-                <strong>{{ readers.length }}</strong>
-                <small>Active boundary triggers</small>
-                </article>
-            </div>
-
-            <div class="dashboard-grid">
-                <article class="panel panel-large">
-                <div class="panel-header">
-                    <div>
-                    <h2>Live Geofence Activity</h2>
-                    <p>Dynamic view of RFID-triggered geofence movement.</p>
-                    </div>
-                    <span class="panel-badge">Realtime</span>
-                </div>
-
-                <div class="geofence-map">
-                    <div
-                    v-for="(zone, index) in geofenceOccupancy"
-                    :key="zone.id"
-                    class="zone-node"
-                    :class="`zone-node-${(index % 6) + 1}`"
-                    >
-                    <span class="zone-pulse"></span>
-                    <strong>{{ zone.name }}</strong>
-                    <small>{{ zone.occupancy }} occupants</small>
-                    </div>
-
-                    <div v-if="!geofenceOccupancy.length" class="empty-map">
-                    No geofence zones found. Add geofence zones in Supabase.
-                    </div>
-                </div>
-                </article>
-
-                <article class="panel">
-                <div class="panel-header">
-                    <div>
-                    <h2>Active Alerts</h2>
-                    <p>Security exceptions and denied access logs.</p>
-                    </div>
-                </div>
-
-                <div class="alert-list">
-                    <div
-                    v-for="alert in activeAlerts.slice(0, 6)"
-                    :key="alert.id"
-                    class="alert-item"
-                    :class="`alert-${alert.severity}`"
-                    >
-                    <div>
-                        <strong>{{ alert.alert_type || 'Security Alert' }}</strong>
-                        <p>{{ alert.message }}</p>
-                    </div>
-                    <small>{{ formatTime(alert.created_at) }}</small>
-                    </div>
-
-                    <p v-if="!activeAlerts.length" class="empty-text">
-                    No active alerts.
-                    </p>
-                </div>
-                </article>
-            </div>
-
-            <div class="dashboard-grid lower-grid">
-                <article class="panel">
-                <div class="panel-header">
-                    <div>
-                    <h2>Recent RFID Reads</h2>
-                    <p>Newest reads from Python/SimPy or RFID device layer.</p>
-                    </div>
-                </div>
-
-                <div class="event-feed">
-                    <div
-                    v-for="event in recentEvents"
-                    :key="event.id"
-                    class="event-row"
-                    >
-                    <span class="event-dot"></span>
-                    <div>
-                        <strong>{{ event.tag_uid }}</strong>
-                        <p>{{ event.event_type }} · Reader {{ event.reader_id || 'N/A' }}</p>
-                    </div>
-                    <small>{{ formatTime(event.occurred_at) }}</small>
-                    </div>
-
-                    <p v-if="!recentEvents.length" class="empty-text">
-                    No RFID events yet. Start your simulation to populate this feed.
-                    </p>
-                </div>
-                </article>
-
-                <article class="panel">
-                <div class="panel-header">
-                    <div>
-                    <h2>Access Decisions</h2>
-                    <p>Allowed, denied, and alert-triggered decisions.</p>
-                    </div>
-                </div>
-
-                <div class="decision-summary">
-                    <div class="decision-box allowed">
-                    <strong>{{ allowedLogs.length }}</strong>
-                    <span>Allowed</span>
-                    </div>
-
-                    <div class="decision-box denied">
-                    <strong>{{ deniedLogs.length }}</strong>
-                    <span>Denied / Alert</span>
-                    </div>
-                </div>
-
-                <div class="mini-table">
-                    <div
-                    v-for="log in accessLogs.slice(0, 5)"
-                    :key="log.id"
-                    class="mini-row"
-                    >
-                    <span :class="['status-dot', log.decision]"></span>
-                    <p>{{ log.reason || 'Access decision processed' }}</p>
-                    <small>{{ log.decision }}</small>
-                    </div>
-                </div>
-                </article>
-            </div>
-            </template>
-
-            <template v-else-if="activeSection === 'live-geofence'">
-            <article class="panel full-panel">
-                <div class="panel-header">
-                <div>
-                    <h2>Live Geofence Monitor</h2>
-                    <p>Each zone below represents logical RFID reader grouping, not GPS-only boundaries.</p>
-                </div>
-                </div>
-
-                <div class="zone-grid">
-                <div
-                    v-for="zone in geofenceOccupancy"
-                    :key="zone.id"
-                    class="zone-card"
-                >
-                    <div class="zone-card-top">
-                    <h3>{{ zone.name }}</h3>
-                    <span>{{ zone.zone_type || 'zone' }}</span>
-                    </div>
-                    <p>{{ zone.description || 'No description provided.' }}</p>
-                    <div class="zone-meter">
-                    <span :style="{ width: `${Math.min(zone.occupancy * 10, 100)}%` }"></span>
-                    </div>
-                    <strong>{{ zone.occupancy }} live occupants</strong>
-                </div>
-
-                <p v-if="!geofenceOccupancy.length" class="empty-text">
-                    No geofence zones available.
-                </p>
-                </div>
+      <section v-else class="dashboard-content">
+        <template v-if="activeSection === 'dashboard'">
+          <div class="stats-grid">
+            <article class="stat-card">
+              <span>Total RFID Events</span>
+              <strong>{{ detectionEvents.length }}</strong>
+              <small>Latest simulation reads</small>
             </article>
-            </template>
 
-            <template v-else-if="activeSection === 'events'">
-            <article class="panel full-panel">
-                <div class="panel-header">
-                <div>
-                    <h2>RFID Detection Events</h2>
-                    <p>Raw detection events from the simulation or hardware reader layer.</p>
-                </div>
-                </div>
-
-                <div class="data-table">
-                <div class="table-head">
-                    <span>Tag UID</span>
-                    <span>Reader</span>
-                    <span>Event Type</span>
-                    <span>Time</span>
-                </div>
-
-                <div
-                    v-for="event in detectionEvents"
-                    :key="event.id"
-                    class="table-row"
-                >
-                    <span>{{ event.tag_uid }}</span>
-                    <span>{{ event.reader_id || 'N/A' }}</span>
-                    <span>{{ event.event_type }}</span>
-                    <span>{{ formatDate(event.occurred_at) }}</span>
-                </div>
-                </div>
+            <article class="stat-card">
+              <span>Active Alerts</span>
+              <strong>{{ activeAlerts.length }}</strong>
+              <small>{{ criticalAlerts.length }} critical</small>
             </article>
-            </template>
 
-            <template v-else-if="activeSection === 'alerts'">
-            <article class="panel full-panel">
-                <div class="panel-header">
+            <article class="stat-card">
+              <span>Geofence Zones</span>
+              <strong>{{ geofences.length }}</strong>
+              <small>Logical RFID zones</small>
+            </article>
+
+            <article class="stat-card">
+              <span>RFID Readers</span>
+              <strong>{{ readers.length }}</strong>
+              <small>Active boundary triggers</small>
+            </article>
+          </div>
+
+          <div class="dashboard-grid">
+            <article class="panel panel-large">
+              <div class="panel-header">
                 <div>
-                    <h2>Alerts & Notifications</h2>
-                    <p>Security alerts generated from rule-based geofence decisions.</p>
+                  <h2>Live Geofence Activity</h2>
+                  <p>Dynamic view of RFID-triggered geofence movement.</p>
                 </div>
+                <span class="panel-badge">Realtime</span>
+              </div>
+
+              <div class="geofence-map">
+                <div
+                  v-for="(zone, index) in geofenceOccupancy"
+                  :key="zone.id"
+                  class="zone-node"
+                  :class="`zone-node-${(index % 6) + 1}`"
+                >
+                  <span class="zone-pulse"></span>
+                  <strong>{{ zone.name }}</strong>
+                  <small>{{ zone.occupancy }} occupants</small>
                 </div>
 
-                <div class="alert-grid">
+                <div v-if="!geofenceOccupancy.length" class="empty-map">
+                  No geofence zones found. Add geofence zones in Supabase.
+                </div>
+              </div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-header">
+                <div>
+                  <h2>Active Alerts</h2>
+                  <p>Security exceptions and denied access logs.</p>
+                </div>
+              </div>
+
+              <div class="alert-list">
                 <div
-                    v-for="alert in alerts"
-                    :key="alert.id"
-                    class="alert-card"
-                    :class="`alert-${alert.severity}`"
+                  v-for="alert in activeAlerts.slice(0, 6)"
+                  :key="alert.id"
+                  class="alert-item"
+                  :class="`alert-${alert.severity}`"
                 >
-                    <div>
-                    <h3>{{ alert.alert_type }}</h3>
+                  <div>
+                    <strong>{{ alert.alert_type || 'Security Alert' }}</strong>
                     <p>{{ alert.message }}</p>
-                    </div>
-
-                    <div class="alert-card-footer">
-                    <span>{{ alert.severity }}</span>
-                    <small>{{ formatDate(alert.created_at) }}</small>
-                    </div>
+                  </div>
+                  <small>{{ formatTime(alert.created_at) }}</small>
                 </div>
 
-                <p v-if="!alerts.length" class="empty-text">
-                    No alerts have been generated yet.
+                <p v-if="!activeAlerts.length" class="empty-text">
+                  No active alerts.
                 </p>
-                </div>
+              </div>
             </article>
-            </template>
+          </div>
 
-            <template v-else-if="activeSection === 'students'">
-            <article class="panel full-panel">
-                <div class="panel-header">
+          <div class="dashboard-grid lower-grid">
+            <article class="panel">
+              <div class="panel-header">
                 <div>
-                    <h2>Student Tracking</h2>
-                    <p>RFID-linked student identities and movement visibility.</p>
+                  <h2>Recent RFID Reads</h2>
+                  <p>Newest reads from Python/SimPy or RFID device layer.</p>
                 </div>
-                </div>
+              </div>
 
-                <div class="data-table">
-                <div class="table-head">
-                    <span>Name</span>
-                    <span>Matric Number</span>
-                    <span>RFID UID</span>
-                    <span>Department</span>
-                </div>
-
+              <div class="event-feed">
                 <div
-                    v-for="student in students"
-                    :key="student.id"
-                    class="table-row"
+                  v-for="event in recentEvents"
+                  :key="event.id"
+                  class="event-row"
                 >
-                    <span>{{ student.full_name }}</span>
-                    <span>{{ student.matric_number }}</span>
-                    <span>{{ student.rfid_uid }}</span>
-                    <span>{{ student.department || 'N/A' }}</span>
+                  <span class="event-dot"></span>
+                  <div>
+                    <strong>{{ event.tag_uid }}</strong>
+                    <p>{{ event.event_type }} · Reader {{ event.reader_id || 'N/A' }}</p>
+                  </div>
+                  <small>{{ formatTime(event.occurred_at) }}</small>
                 </div>
-                </div>
+
+                <p v-if="!recentEvents.length" class="empty-text">
+                  No RFID events yet. Start your simulation to populate this feed.
+                </p>
+              </div>
             </article>
-            </template>
 
-            <template v-else-if="activeSection === 'readers'">
-            <article class="panel full-panel">
-                <div class="panel-header">
+            <article class="panel">
+              <div class="panel-header">
                 <div>
-                    <h2>RFID Readers</h2>
-                    <p>Reader devices acting as geofence triggers.</p>
+                  <h2>Access Decisions</h2>
+                  <p>Allowed, denied, and alert-triggered decisions.</p>
                 </div>
+              </div>
+
+              <div class="decision-summary">
+                <div class="decision-box allowed">
+                  <strong>{{ allowedLogs.length }}</strong>
+                  <span>Allowed</span>
                 </div>
 
-                <div class="zone-grid">
+                <div class="decision-box denied">
+                  <strong>{{ deniedLogs.length }}</strong>
+                  <span>Denied / Alert</span>
+                </div>
+              </div>
+
+              <div class="mini-table">
                 <div
-                    v-for="reader in readers"
-                    :key="reader.id"
-                    class="zone-card"
+                  v-for="log in accessLogs.slice(0, 5)"
+                  :key="log.id"
+                  class="mini-row"
                 >
-                    <div class="zone-card-top">
-                    <h3>{{ reader.name }}</h3>
-                    <span>{{ reader.is_active ? 'Active' : 'Inactive' }}</span>
-                    </div>
-                    <p>{{ reader.location || 'No location provided.' }}</p>
-                    <strong>{{ reader.reader_code }}</strong>
+                  <span :class="['status-dot', log.decision]"></span>
+                  <p>{{ log.reason || 'Access decision processed' }}</p>
+                  <small>{{ log.decision }}</small>
                 </div>
-                </div>
+              </div>
             </article>
-            </template>
+          </div>
+        </template>
 
-            <template v-else-if="activeSection === 'emergency'">
-            <article class="panel full-panel emergency-panel">
-                <div class="panel-header">
+        <template v-else-if="activeSection === 'live-geofence'">
+          <article class="panel full-panel">
+            <div class="panel-header">
+              <div>
+                <h2>Live Geofence Monitor</h2>
+                <p>Each zone below represents logical RFID reader grouping, not GPS-only boundaries.</p>
+              </div>
+            </div>
+
+            <div class="zone-grid">
+              <div
+                v-for="zone in geofenceOccupancy"
+                :key="zone.id"
+                class="zone-card"
+              >
+                <div class="zone-card-top">
+                  <h3>{{ zone.name }}</h3>
+                  <span>{{ zone.zone_type || 'zone' }}</span>
+                </div>
+                <p>{{ zone.description || 'No description provided.' }}</p>
+                <div class="zone-meter">
+                  <span :style="{ width: `${Math.min(zone.occupancy * 10, 100)}%` }"></span>
+                </div>
+                <strong>{{ zone.occupancy }} live occupants</strong>
+              </div>
+
+              <p v-if="!geofenceOccupancy.length" class="empty-text">
+                No geofence zones available.
+              </p>
+            </div>
+          </article>
+        </template>
+
+        <template v-else-if="activeSection === 'events'">
+          <article class="panel full-panel">
+            <div class="panel-header">
+              <div>
+                <h2>RFID Detection Events</h2>
+                <p>Raw detection events from the simulation or hardware reader layer.</p>
+              </div>
+            </div>
+
+            <div class="data-table">
+              <div class="table-head">
+                <span>Tag UID</span>
+                <span>Reader</span>
+                <span>Event Type</span>
+                <span>Time</span>
+              </div>
+
+              <div
+                v-for="event in detectionEvents"
+                :key="event.id"
+                class="table-row"
+              >
+                <span>{{ event.tag_uid }}</span>
+                <span>{{ event.reader_id || 'N/A' }}</span>
+                <span>{{ event.event_type }}</span>
+                <span>{{ formatDate(event.occurred_at) }}</span>
+              </div>
+            </div>
+          </article>
+        </template>
+
+        <template v-else-if="activeSection === 'alerts'">
+          <article class="panel full-panel">
+            <div class="panel-header">
+              <div>
+                <h2>Alerts & Notifications</h2>
+                <p>Security alerts generated from rule-based geofence decisions.</p>
+              </div>
+            </div>
+
+            <div class="alert-grid">
+              <div
+                v-for="alert in alerts"
+                :key="alert.id"
+                class="alert-card"
+                :class="`alert-${alert.severity}`"
+              >
                 <div>
-                    <h2>Emergency Lockdown Control</h2>
-                    <p>Control area restrictions and review emergency occupancy quickly.</p>
-                </div>
-                </div>
-
-                <div class="emergency-actions">
-                <button type="button" class="danger-btn">
-                    Trigger Full Lockdown
-                </button>
-
-                <button type="button" class="warning-btn">
-                    Lockdown Hostel Zones
-                </button>
-
-                <button type="button" class="safe-btn">
-                    Generate Occupancy Report
-                </button>
+                  <h3>{{ alert.alert_type }}</h3>
+                  <p>{{ alert.message }}</p>
                 </div>
 
-                <p class="helper-note">
-                These buttons are UI-ready. Next, we will connect them to Supabase mutations or FastAPI endpoints.
-                </p>
-            </article>
-            </template>
+                <div class="alert-card-footer">
+                  <span>{{ alert.severity }}</span>
+                  <small>{{ formatDate(alert.created_at) }}</small>
+                </div>
+              </div>
 
-            <template v-else>
-            <article class="panel full-panel">
-                <div class="panel-header">
-                <div>
-                    <h2>{{ sectionTitle }}</h2>
-                    <p>This section is ready for the next implementation step.</p>
-                </div>
-                </div>
+              <p v-if="!alerts.length" class="empty-text">
+                No alerts have been generated yet.
+              </p>
+            </div>
+          </article>
+        </template>
 
-                <div class="placeholder-block">
-                <h3>{{ sectionTitle }} module</h3>
-                <p>
-                    We will connect this module to Supabase tables and role-based permissions as the system grows.
-                </p>
+        <template v-else-if="activeSection === 'students'">
+          <article class="panel full-panel">
+            <div class="panel-header">
+              <div>
+                <h2>Student Tracking</h2>
+                <p>RFID-linked student identities and movement visibility.</p>
+              </div>
+            </div>
+
+            <div class="data-table">
+              <div class="table-head">
+                <span>Name</span>
+                <span>Matric Number</span>
+                <span>RFID UID</span>
+                <span>Department</span>
+              </div>
+
+              <div
+                v-for="student in students"
+                :key="student.id"
+                class="table-row"
+              >
+                <span>{{ student.full_name }}</span>
+                <span>{{ student.matric_number }}</span>
+                <span>{{ student.rfid_uid }}</span>
+                <span>{{ student.department || 'N/A' }}</span>
+              </div>
+            </div>
+          </article>
+        </template>
+
+        <template v-else-if="activeSection === 'readers'">
+          <article class="panel full-panel">
+            <div class="panel-header">
+              <div>
+                <h2>RFID Readers</h2>
+                <p>Reader devices acting as geofence triggers.</p>
+              </div>
+            </div>
+
+            <div class="zone-grid">
+              <div
+                v-for="reader in readers"
+                :key="reader.id"
+                class="zone-card"
+              >
+                <div class="zone-card-top">
+                  <h3>{{ reader.name }}</h3>
+                  <span>{{ reader.is_active ? 'Active' : 'Inactive' }}</span>
                 </div>
-            </article>
-            </template>
-        </section>
-        </section>
-    </main>
+                <p>{{ reader.location || 'No location provided.' }}</p>
+                <strong>{{ reader.reader_code }}</strong>
+              </div>
+            </div>
+          </article>
+        </template>
+
+        <template v-else-if="activeSection === 'emergency'">
+          <article class="panel full-panel emergency-panel">
+            <div class="panel-header">
+              <div>
+                <h2>Emergency Lockdown Control</h2>
+                <p>Control area restrictions and review emergency occupancy quickly.</p>
+              </div>
+            </div>
+
+            <div class="emergency-actions">
+              <button type="button" class="danger-btn">
+                Trigger Full Lockdown
+              </button>
+
+              <button type="button" class="warning-btn">
+                Lockdown Hostel Zones
+              </button>
+
+              <button type="button" class="safe-btn">
+                Generate Occupancy Report
+              </button>
+            </div>
+
+            <p class="helper-note">
+              These buttons are UI-ready. Next, we will connect them to Supabase mutations or FastAPI endpoints.
+            </p>
+          </article>
+        </template>
+
+        <template v-else>
+          <article class="panel full-panel">
+            <div class="panel-header">
+              <div>
+                <h2>{{ sectionTitle }}</h2>
+                <p>This section is ready for the next implementation step.</p>
+              </div>
+            </div>
+
+            <div class="placeholder-block">
+              <h3>{{ sectionTitle }} module</h3>
+              <p>
+                We will connect this module to Supabase tables and role-based permissions as the system grows.
+              </p>
+            </div>
+          </article>
+        </template>
+      </section>
+    </section>
+  </main>
 </template>
 
 <style scoped>
