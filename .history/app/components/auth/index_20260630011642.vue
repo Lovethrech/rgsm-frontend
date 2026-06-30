@@ -2,17 +2,17 @@
 const showSignUp = ref(false)
 
 const authMainTitle = computed(() =>
-    showSignUp.value ? 'Welcome, New User' : 'Welcome, Admin'
+  showSignUp.value ? 'Welcome, New User' : 'Welcome, Admin'
 )
 
 const authMainDesc = computed(() =>
-    showSignUp.value
-        ? 'To access the realtime system dashboard for monitoring and moderation, please sign up.'
-        : 'To access the realtime system dashboard for monitoring and moderation.'
+  showSignUp.value
+    ? 'To access the realtime system dashboard for monitoring and moderation, please sign up.'
+    : 'To access the realtime system dashboard for monitoring and moderation.'
 )
 
 const toggleSignUp = () => {
-    showSignUp.value = !showSignUp.value
+  showSignUp.value = !showSignUp.value
 }
 </script>
 
@@ -21,18 +21,18 @@ const toggleSignUp = () => {
         <ChelLogo />
 
         <h1 class="auth-main-title">
-            {{ authMainTitle }}
+        {{ authMainTitle }}
         </h1>
 
         <p class="auth-main-desc">  
-            {{ authMainDesc }}
+        {{ authMainDesc }}
         </p>
 
         <br />
 
         <div class="auth-main-form-ct">
-            <AuthSignUp v-if="showSignUp" />
-            <AuthLogin v-else />
+        <AuthSignUp v-if="showSignUp" />
+        <AuthLogin v-else />
         </div>
 
         <div class="auth-question-ctn">

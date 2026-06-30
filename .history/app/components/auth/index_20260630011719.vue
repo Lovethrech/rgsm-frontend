@@ -21,7 +21,7 @@ const toggleSignUp = () => {
         <ChelLogo />
 
         <h1 class="auth-main-title">
-            {{ authMainTitle }}
+        {{ authMainTitle }}
         </h1>
 
         <p class="auth-main-desc">  
