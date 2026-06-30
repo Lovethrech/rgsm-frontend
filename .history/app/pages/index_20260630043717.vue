@@ -6,7 +6,7 @@
 
 <script setup>
 useHead({
-    title: "Auth | RGSM"
+    title: "Auth | RGSM "
 })
 </script>
 <style scoped>
