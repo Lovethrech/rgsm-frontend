@@ -383,7 +383,7 @@ onUnmounted(async () => {
 
                 <div class="profile-meta">
                   <strong>{{ profile?.full_name || profile?.email || 'RGSM Admin' }}</strong>
-                  <small>{{ profile?.role?.replace('_', ' ') || 'Authenticated User' }}</small>
+  <small>{{ profile?.role?.replace('_', ' ') || 'Authenticated User' }}</small>
                 </div>
             </div>
             </div>

@@ -290,18 +290,7 @@ const subscribeToRealtime = () => {
 
 let realtimeChannel = null
 
-onMounted(async () => {
-  loading.value = true
 
-  await loadProfile()
-
-  if (!authError.value && profile.value) {
-    await loadDashboardData()
-    realtimeChannel = subscribeToRealtime()
-  }
-
-  loading.value = false
-})
 
 onUnmounted(async () => {
   if (realtimeChannel) {
@@ -382,8 +371,8 @@ onUnmounted(async () => {
                 </span>
 
                 <div class="profile-meta">
-                  <strong>{{ profile?.full_name || profile?.email || 'RGSM Admin' }}</strong>
-                  <small>{{ profile?.role?.replace('_', ' ') || 'Authenticated User' }}</small>
+                <strong>{{ profile?.full_name || 'Admin User' }}</strong>
+                <small>{{ profile?.role || 'admin' }}</small>
                 </div>
             </div>
             </div>
