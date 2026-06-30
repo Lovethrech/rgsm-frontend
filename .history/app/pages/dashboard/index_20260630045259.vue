@@ -21,19 +21,19 @@ const readers = ref([])
 const students = ref([])
 
 const navItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: '▦' },
-    { id: 'live-geofence', label: 'Live Geofence', icon: '◎' },
-    { id: 'events', label: 'RFID Events', icon: '≋' },
-    { id: 'alerts', label: 'Alerts', icon: '!' },
-    { id: 'students', label: 'Students', icon: '♙' },
-    { id: 'readers', label: 'RFID Readers', icon: '▣' },
-    { id: 'geofences', label: 'Geofence Zones', icon: '⬡' },
-    { id: 'hostels', label: 'Hostels', icon: '⌂' },
-    { id: 'simulation', label: 'Simulation', icon: '⚙' },
-    { id: 'reports', label: 'Reports', icon: '▤' },
-    { id: 'emergency', label: 'Emergency', icon: '⌁' },
-    { id: 'users', label: 'Users & Roles', icon: '◉' },
-    { id: 'settings', label: 'Settings', icon: '☷' }
+  { id: 'dashboard', label: 'Dashboard', icon: '▦' },
+  { id: 'live-geofence', label: 'Live Geofence', icon: '◎' },
+  { id: 'events', label: 'RFID Events', icon: '≋' },
+  { id: 'alerts', label: 'Alerts', icon: '!' },
+  { id: 'students', label: 'Students', icon: '♙' },
+  { id: 'readers', label: 'RFID Readers', icon: '▣' },
+  { id: 'geofences', label: 'Geofence Zones', icon: '⬡' },
+  { id: 'hostels', label: 'Hostels', icon: '⌂' },
+  { id: 'simulation', label: 'Simulation', icon: '⚙' },
+  { id: 'reports', label: 'Reports', icon: '▤' },
+  { id: 'emergency', label: 'Emergency', icon: '⌁' },
+  { id: 'users', label: 'Users & Roles', icon: '◉' },
+  { id: 'settings', label: 'Settings', icon: '☷' }
 ]
 
 const sectionTitle = computed(() => {
