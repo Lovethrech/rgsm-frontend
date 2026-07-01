@@ -143,15 +143,9 @@ const sectionTitle = computed(() => {
   return navItems.find((item) => item.id === activeSection.value)?.label || 'Dashboard'
 })
 
-const activeAlerts = computed(() =>
-  alerts.value.filter((alert) =>
-    ['open', 'acknowledged'].includes(alert.status)
-  )
-)
-
-const resolvedAlerts = computed(() =>
-  alerts.value.filter((alert) => alert.status === 'resolved')
-)
+const activeAlerts = computed(() => {
+  return alerts.value.filter((alert) => alert.status !== 'resolved')
+})
 
 const criticalAlerts = computed(() => {
   return alerts.value.filter((alert) => alert.severity === 'critical' && alert.status !== 'resolved')
@@ -399,6 +393,19 @@ const subscribeToRealtime = () => {
 
 let realtimeChannel = null
 
+onMounted(async () => {
+  loading.value = true
+
+  await loadProfile()
+
+  if (!authError.value && profile.value) {
+    await loadDashboardData()
+    realtimeChannel = subscribeToRealtime()
+    await getSimulationStatus()
+  }
+
+  loading.value = false
+})
 const alertActionLoading = ref(false)
 
 const updateAlertStatus = async (alertId, status) => {
@@ -441,21 +448,6 @@ const acknowledgeAlert = async (alertId) => {
 const resolveAlert = async (alertId) => {
   await updateAlertStatus(alertId, 'resolved')
 }
-
-onMounted(async () => {
-  loading.value = true
-
-  await loadProfile()
-
-  if (!authError.value && profile.value) {
-    await loadDashboardData()
-    realtimeChannel = subscribeToRealtime()
-    await getSimulationStatus()
-  }
-
-  loading.value = false
-})
-
 
 onUnmounted(async () => {
   if (realtimeChannel) {
@@ -625,27 +617,6 @@ onUnmounted(async () => {
                     class="alert-item"
                     :class="`alert-${alert.severity}`"
                     >
-                      <div class="alert-actions">
-                        <button
-                          v-if="alert.status === 'open'"
-                          type="button"
-                          class="ack-btn"
-                          :disabled="alertActionLoading"
-                          @click="acknowledgeAlert(alert.id)"
-                        >
-                          Acknowledge
-                        </button>
-
-                        <button
-                          v-if="alert.status !== 'resolved'"
-                          type="button"
-                          class="resolve-btn"
-                          :disabled="alertActionLoading"
-                          @click="resolveAlert(alert.id)"
-                        >
-                          Resolve
-                        </button>
-                      </div>
                     <div>
                         <strong>{{ alert.alert_type || 'Security Alert' }}</strong>
                         <p>{{ alert.message }}</p>
@@ -1812,58 +1783,6 @@ onUnmounted(async () => {
 .simulation-feed {
   max-height: 360px;
   overflow-y: auto;
-}
-
-.alert-actions {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-
-.ack-btn,
-.resolve-btn {
-  border: none;
-  border-radius: 999px;
-  padding: 0.55rem 0.85rem;
-  font-size: 0.75rem;
-  font-weight: 900;
-  cursor: pointer;
-}
-
-.ack-btn {
-  background: rgba(59, 130, 246, 0.15);
-  color: #bfdbfe;
-  border: 1px solid rgba(59, 130, 246, 0.35);
-}
-
-.resolve-btn {
-  background: rgba(34, 197, 94, 0.15);
-  color: #bbf7d0;
-  border: 1px solid rgba(34, 197, 94, 0.35);
-}
-
-.ack-btn:disabled,
-.resolve-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.alert-meta {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  margin-top: 0.45rem;
-}
-
-.alert-meta span {
-  padding: 0.25rem 0.5rem;
-  border-radius: 999px;
-  background: rgba(148, 163, 184, 0.12);
-  color: #cbd5e1;
-  font-size: 0.7rem;
-  font-weight: 800;
-  text-transform: capitalize;
 }
 
 @media screen and (max-width: 900px) {
