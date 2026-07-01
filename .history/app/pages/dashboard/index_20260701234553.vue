@@ -779,63 +779,6 @@ const deactivateLockdown = async () => {
   await updateEmergencyLockdown(false)
 }
 
-const syncSystemConfigForm = () => {
-  const config = systemConfiguration.value
-
-  systemConfigForm.value = {
-    system_name: config.system_name || 'RGSM Campus Security',
-    security_contact: config.security_contact || 'security@demo-university.edu',
-    alert_retention_days: Number(config.alert_retention_days || 30),
-    default_simulation_students: Number(config.default_simulation_students || 20),
-    default_simulation_duration: Number(config.default_simulation_duration || 60),
-    auto_generate_alerts: Boolean(config.auto_generate_alerts ?? true)
-  }
-
-  simulationStudents.value = systemConfigForm.value.default_simulation_students
-  simulationDuration.value = systemConfigForm.value.default_simulation_duration
-}
-
-const saveSystemConfiguration = async () => {
-  settingsLoading.value = true
-  authError.value = ''
-
-  try {
-    const existingSetting = systemSettings.value.find(
-      (item) => item.setting_key === 'system_configuration'
-    )
-
-    if (!existingSetting) {
-      throw new Error('System configuration setting was not found.')
-    }
-
-    const { data, error } = await supabase
-      .from('system_settings')
-      .update({
-        setting_value: systemConfigForm.value,
-        updated_at: new Date().toISOString()
-      })
-      .eq('id', existingSetting.id)
-      .select()
-      .single()
-
-    if (error) {
-      throw error
-    }
-
-    systemSettings.value = systemSettings.value.map((item) =>
-      item.id === data.id ? data : item
-    )
-
-    simulationStudents.value = systemConfigForm.value.default_simulation_students
-    simulationDuration.value = systemConfigForm.value.default_simulation_duration
-  } catch (error) {
-    console.error('Failed to save settings:', error)
-    authError.value = error?.message || 'Failed to save system settings.'
-  } finally {
-    settingsLoading.value = false
-  }
-}
-
 onMounted(async () => {
   loading.value = true
 
@@ -845,7 +788,6 @@ onMounted(async () => {
     await loadDashboardData()
     await loadProfiles()
     await loadSystemSettings()
-    syncSystemConfigForm()
     realtimeChannel = subscribeToRealtime()
     await getSimulationStatus()
   }
@@ -1767,110 +1709,6 @@ onUnmounted(async () => {
                     No incident data available yet.
                   </p>
                 </section>
-              </article>
-            </template>
-
-            <template v-else-if="activeSection === 'settings'">
-              <article class="panel full-panel">
-                <div class="panel-header">
-                  <div>
-                    <h2>System Settings</h2>
-                    <p>Configure RGSM dashboard preferences and operational defaults.</p>
-                  </div>
-
-                  <span class="status-pill status-approved">
-                    {{ profile?.role === 'global_admin' ? 'Global Admin Access' : 'Read Only' }}
-                  </span>
-                </div>
-
-                <div class="settings-grid">
-                  <section class="settings-card">
-                    <h3>General Configuration</h3>
-
-                    <div class="settings-form">
-                      <label>
-                        System Name
-                        <input
-                          v-model="systemConfigForm.system_name"
-                          type="text"
-                          :disabled="profile?.role !== 'global_admin'"
-                        />
-                      </label>
-
-                      <label>
-                        Security Contact Email
-                        <input
-                          v-model="systemConfigForm.security_contact"
-                          type="email"
-                          :disabled="profile?.role !== 'global_admin'"
-                        />
-                      </label>
-
-                      <label>
-                        Alert Retention Days
-                        <input
-                          v-model.number="systemConfigForm.alert_retention_days"
-                          type="number"
-                          min="1"
-                          max="365"
-                          :disabled="profile?.role !== 'global_admin'"
-                        />
-                      </label>
-                    </div>
-                  </section>
-
-                  <section class="settings-card">
-                    <h3>Simulation Defaults</h3>
-
-                    <div class="settings-form">
-                      <label>
-                        Default Students
-                        <input
-                          v-model.number="systemConfigForm.default_simulation_students"
-                          type="number"
-                          min="1"
-                          max="200"
-                          :disabled="profile?.role !== 'global_admin'"
-                        />
-                      </label>
-
-                      <label>
-                        Default Duration Seconds
-                        <input
-                          v-model.number="systemConfigForm.default_simulation_duration"
-                          type="number"
-                          min="10"
-                          max="3600"
-                          :disabled="profile?.role !== 'global_admin'"
-                        />
-                      </label>
-
-                      <label class="toggle-setting">
-                        <input
-                          v-model="systemConfigForm.auto_generate_alerts"
-                          type="checkbox"
-                          :disabled="profile?.role !== 'global_admin'"
-                        />
-                        <span>Enable automatic alert generation</span>
-                      </label>
-                    </div>
-                  </section>
-                </div>
-
-                <div class="settings-footer">
-                  <button
-                    type="button"
-                    class="safe-btn"
-                    :disabled="settingsLoading || profile?.role !== 'global_admin'"
-                    @click="saveSystemConfiguration"
-                  >
-                    {{ settingsLoading ? 'Saving...' : 'Save Settings' }}
-                  </button>
-
-                  <p v-if="profile?.role !== 'global_admin'" class="empty-text">
-                    Only Global Admin users can update system settings.
-                  </p>
-                </div>
               </article>
             </template>
 
@@ -2995,83 +2833,6 @@ onUnmounted(async () => {
 
 .severity.low strong {
   color: #86efac;
-}
-
-.settings-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.1rem;
-}
-
-.settings-card {
-  padding: 1.2rem;
-  border-radius: 1.2rem;
-  background: rgba(148, 163, 184, 0.08);
-  border: 1px solid rgba(148, 163, 184, 0.14);
-}
-
-.settings-card h3 {
-  margin-top: 0;
-  color: #dbeafe;
-}
-
-.settings-form {
-  display: grid;
-  gap: 1rem;
-}
-
-.settings-form label {
-  display: grid;
-  gap: 0.45rem;
-  color: #cbd5e1;
-  font-size: 0.9rem;
-  font-weight: 800;
-}
-
-.settings-form input[type='text'],
-.settings-form input[type='email'],
-.settings-form input[type='number'] {
-  width: 100%;
-  padding: 0.85rem;
-  border-radius: 0.85rem;
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  background: rgba(15, 23, 42, 0.9);
-  color: #ffffff;
-  outline: none;
-}
-
-.settings-form input:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.toggle-setting {
-  display: flex !important;
-  grid-template-columns: none !important;
-  align-items: center;
-  gap: 0.7rem !important;
-  padding: 0.85rem;
-  border-radius: 0.85rem;
-  background: rgba(15, 23, 42, 0.65);
-}
-
-.toggle-setting input {
-  width: 18px;
-  height: 18px;
-}
-
-.settings-footer {
-  margin-top: 1.2rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-@media screen and (max-width: 900px) {
-  .settings-grid {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media screen and (max-width: 900px) {
