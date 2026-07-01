@@ -1082,6 +1082,34 @@ onUnmounted(async () => {
             </article>
             </template>
 
+            <template v-else-if="activeSection === 'emergency'">
+            <article class="panel full-panel emergency-panel">
+                <div class="panel-header">
+                <div>
+                    <h2>Emergency Lockdown Control</h2>
+                    <p>Control area restrictions and review emergency occupancy quickly.</p>
+                </div>
+                </div>
+
+                <div class="emergency-actions">
+                <button type="button" class="danger-btn">
+                    Trigger Full Lockdown
+                </button>
+
+                <button type="button" class="warning-btn">
+                    Lockdown Hostel Zones
+                </button>
+
+                <button type="button" class="safe-btn">
+                    Generate Occupancy Report
+                </button>
+                </div>
+
+                <p class="helper-note">
+                These buttons are UI-ready. Next, we will connect them to Supabase mutations or FastAPI endpoints.
+                </p>
+            </article>
+            </template>
 
             <!-- SIMULATION -->
             <template v-else-if="activeSection === 'simulation'">

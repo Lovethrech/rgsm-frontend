@@ -187,7 +187,7 @@ const navItems = [
     { id: 'hostels', label: 'Hostels', icon: '⌂' },
     { id: 'simulation', label: 'Simulation', icon: '⚙' },
     { id: 'reports', label: 'Reports', icon: '▤' },
-    { id: 'emergency', label: 'Emergency', key: 'emergency', icon: '⌁' },
+    { id: 'emergency', label: 'Emergency', icon: '⌁' },
     { id: 'users', label: 'Users & Roles', key: 'users', icon: '◉' },
     { id: 'settings', label: 'Settings', icon: '☷' }
 ]
@@ -644,6 +644,7 @@ const deactivateLockdown = async () => {
 }
 
 onMounted(async () => {
+  
   loading.value = true
 
   await loadProfile()
@@ -651,7 +652,6 @@ onMounted(async () => {
   if (!authError.value && profile.value) {
     await loadDashboardData()
     await loadProfiles()
-    await loadSystemSettings()
     realtimeChannel = subscribeToRealtime()
     await getSimulationStatus()
   }
@@ -1082,6 +1082,34 @@ onUnmounted(async () => {
             </article>
             </template>
 
+            <template v-else-if="activeSection === 'emergency'">
+            <article class="panel full-panel emergency-panel">
+                <div class="panel-header">
+                <div>
+                    <h2>Emergency Lockdown Control</h2>
+                    <p>Control area restrictions and review emergency occupancy quickly.</p>
+                </div>
+                </div>
+
+                <div class="emergency-actions">
+                <button type="button" class="danger-btn">
+                    Trigger Full Lockdown
+                </button>
+
+                <button type="button" class="warning-btn">
+                    Lockdown Hostel Zones
+                </button>
+
+                <button type="button" class="safe-btn">
+                    Generate Occupancy Report
+                </button>
+                </div>
+
+                <p class="helper-note">
+                These buttons are UI-ready. Next, we will connect them to Supabase mutations or FastAPI endpoints.
+                </p>
+            </article>
+            </template>
 
             <!-- SIMULATION -->
             <template v-else-if="activeSection === 'simulation'">
@@ -1343,99 +1371,6 @@ onUnmounted(async () => {
                       </tr>
                     </tbody>
                   </table>
-                </div>
-              </article>
-            </template>
-
-            <template v-else-if="activeSection === 'emergency'">
-              <article class="panel full-panel">
-                <div class="panel-header">
-                  <div>
-                    <h2>Emergency Lockdown</h2>
-                    <p>Activate or deactivate campus-wide emergency access restriction.</p>
-                  </div>
-
-                  <span
-                    class="lockdown-pill"
-                    :class="{ 'lockdown-active': emergencyLockdown.enabled }"
-                  >
-                    {{ emergencyLockdown.enabled ? 'Lockdown Active' : 'Normal Operation' }}
-                  </span>
-                </div>
-
-                <div class="lockdown-grid">
-                  <section class="lockdown-card">
-                    <h3>Current Emergency Status</h3>
-
-                    <p v-if="emergencyLockdown.enabled" class="lockdown-warning">
-                      Emergency lockdown is currently active. Student RFID access attempts will be denied and logged as critical alerts.
-                    </p>
-
-                    <p v-else class="normal-message">
-                      Campus access is operating under normal geofence rules.
-                    </p>
-
-                    <div class="lockdown-details">
-                      <div>
-                        <span>Reason</span>
-                        <strong>{{ emergencyLockdown.reason || 'No active emergency' }}</strong>
-                      </div>
-
-                      <div>
-                        <span>Activated By</span>
-                        <strong>{{ emergencyLockdown.activated_by || 'N/A' }}</strong>
-                      </div>
-
-                      <div>
-                        <span>Activated At</span>
-                        <strong>
-                          {{
-                            emergencyLockdown.activated_at
-                              ? formatDate(emergencyLockdown.activated_at)
-                              : 'N/A'
-                          }}
-                        </strong>
-                      </div>
-                    </div>
-                  </section>
-
-                  <section class="lockdown-card">
-                    <h3>Lockdown Control</h3>
-
-                    <label class="lockdown-label">
-                      Lockdown Reason
-                      <textarea
-                        v-model="lockdownReason"
-                        rows="4"
-                        placeholder="Enter reason for lockdown..."
-                        :disabled="emergencyLockdown.enabled"
-                      ></textarea>
-                    </label>
-
-                    <div class="lockdown-actions">
-                      <button
-                        type="button"
-                        class="danger-btn"
-                        :disabled="lockdownLoading || emergencyLockdown.enabled || profile?.role !== 'global_admin'"
-                        @click="activateLockdown"
-                      >
-                        {{ lockdownLoading ? 'Activating...' : 'Activate Lockdown' }}
-                      </button>
-
-                      <button
-                        type="button"
-                        class="safe-btn"
-                        :disabled="lockdownLoading || !emergencyLockdown.enabled || profile?.role !== 'global_admin'"
-                        @click="deactivateLockdown"
-                      >
-                        {{ lockdownLoading ? 'Deactivating...' : 'Deactivate Lockdown' }}
-                      </button>
-                    </div>
-
-                    <p v-if="profile?.role !== 'global_admin'" class="empty-text">
-                      Only Global Admin users can change emergency lockdown status.
-                    </p>
-                  </section>
                 </div>
               </article>
             </template>
@@ -2331,112 +2266,6 @@ onUnmounted(async () => {
   background: rgba(15, 23, 42, 0.95);
   color: #ffffff;
   outline: none;
-}
-
-.lockdown-pill {
-  padding: 0.55rem 0.9rem;
-  border-radius: 999px;
-  background: rgba(34, 197, 94, 0.14);
-  color: #bbf7d0;
-  border: 1px solid rgba(34, 197, 94, 0.3);
-  font-size: 0.8rem;
-  font-weight: 900;
-}
-
-.lockdown-active {
-  background: rgba(239, 68, 68, 0.16);
-  color: #fecaca;
-  border-color: rgba(239, 68, 68, 0.35);
-}
-
-.lockdown-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.1rem;
-}
-
-.lockdown-card {
-  padding: 1.2rem;
-  border-radius: 1.2rem;
-  background: rgba(148, 163, 184, 0.08);
-  border: 1px solid rgba(148, 163, 184, 0.14);
-}
-
-.lockdown-card h3 {
-  margin-top: 0;
-  color: #dbeafe;
-}
-
-.lockdown-warning {
-  color: #fecaca;
-  background: rgba(239, 68, 68, 0.14);
-  border: 1px solid rgba(239, 68, 68, 0.25);
-  padding: 0.9rem;
-  border-radius: 0.9rem;
-}
-
-.normal-message {
-  color: #bbf7d0;
-  background: rgba(34, 197, 94, 0.12);
-  border: 1px solid rgba(34, 197, 94, 0.22);
-  padding: 0.9rem;
-  border-radius: 0.9rem;
-}
-
-.lockdown-details {
-  display: grid;
-  gap: 0.8rem;
-  margin-top: 1rem;
-}
-
-.lockdown-details div {
-  padding: 0.9rem;
-  border-radius: 0.9rem;
-  background: rgba(15, 23, 42, 0.65);
-}
-
-.lockdown-details span {
-  display: block;
-  color: #94a3b8;
-  font-size: 0.75rem;
-  font-weight: 800;
-}
-
-.lockdown-details strong {
-  display: block;
-  margin-top: 0.35rem;
-  color: #ffffff;
-}
-
-.lockdown-label {
-  display: grid;
-  gap: 0.5rem;
-  color: #cbd5e1;
-  font-weight: 800;
-}
-
-.lockdown-label textarea {
-  width: 100%;
-  border-radius: 0.9rem;
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  background: rgba(15, 23, 42, 0.9);
-  color: #ffffff;
-  padding: 0.85rem;
-  resize: vertical;
-  outline: none;
-}
-
-.lockdown-actions {
-  display: flex;
-  gap: 0.8rem;
-  flex-wrap: wrap;
-  margin-top: 1rem;
-}
-
-@media screen and (max-width: 900px) {
-  .lockdown-grid {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media screen and (max-width: 900px) {
