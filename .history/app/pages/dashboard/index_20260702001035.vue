@@ -35,30 +35,7 @@ const systemConfigForm = ref({
   auto_generate_alerts: true
 })
 
-const selectedGeofence = ref(null)
-const geofenceActionLoading = ref(false)
 
-const geofenceRuleForm = ref({
-  name: '',
-  description: '',
-  zone_type: '',
-  allowed_gender: '',
-  time_start: '05:00',
-  time_end: '23:00',
-  allow_roles: []
-})
-
-const availableAccessRoles = [
-  'student',
-  'staff',
-  'security',
-  'lecturer',
-  'lab_technician',
-  'unilateral_admin',
-  'bilateral_admin',
-  'university_admin',
-  'global_admin'
-]
 
 const systemConfiguration = computed(() => {
   const setting = systemSettings.value.find(
