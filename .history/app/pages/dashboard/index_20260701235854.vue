@@ -303,55 +303,6 @@ const alertSeverityReport = computed(() => {
   }
 })
 
-const hostelReport = computed(() => {
-  return hostels.value.map((hostel) => {
-    const hostelStudents = students.value.filter(
-      (student) => student.hostel_id === hostel.id
-    )
-
-    const hostelReaders = readers.value.filter(
-      (reader) => reader.hostel_id === hostel.id
-    )
-
-    const hostelZones = geofences.value.filter(
-      (zone) => zone.hostel_id === hostel.id
-    )
-
-    const hostelAlerts = alerts.value.filter(
-      (alert) => alert.hostel_id === hostel.id && alert.status !== 'resolved'
-    )
-
-    const hostelAccessLogs = accessLogs.value.filter((log) =>
-      hostelZones.some((zone) => zone.id === log.geofence_id)
-    )
-
-    const occupancy = hostelAccessLogs.filter(
-      (log) => log.decision === 'allowed'
-    ).length
-
-    return {
-      ...hostel,
-      students_count: hostelStudents.length,
-      readers_count: hostelReaders.length,
-      zones_count: hostelZones.length,
-      active_alerts_count: hostelAlerts.length,
-      occupancy
-    }
-  })
-})
-
-const totalHostelStudents = computed(() =>
-  hostelReport.value.reduce((total, hostel) => total + hostel.students_count, 0)
-)
-
-const totalHostelAlerts = computed(() =>
-  hostelReport.value.reduce((total, hostel) => total + hostel.active_alerts_count, 0)
-)
-
-const hostelRelatedAlerts = computed(() =>
-  alerts.value.filter((alert) => alert.hostel_id && alert.status !== 'resolved')
-)
-
 const formatTime = (dateValue) => {
   if (!dateValue) return 'N/A'
 
@@ -470,8 +421,7 @@ const loadDashboardData = async () => {
       .from('hostels')
       .select('*')
       .order('created_at', { ascending: false })
-  ])
-
+  ]
   if (!detectionEventsResponse.error) {
     detectionEvents.value = detectionEventsResponse.data || []
   }
@@ -495,10 +445,6 @@ const loadDashboardData = async () => {
 
   if (!studentsResponse.error) {
     students.value = studentsResponse.data || []
-  }
-
-  if (!hostelsResponse.error) {
-    hostels.value = hostelsResponse.data || []
   }
 }
 
@@ -1335,146 +1281,6 @@ onUnmounted(async () => {
             </article>
             </template>
 
-            <template v-else-if="activeSection === 'hostels'">
-              <article class="panel full-panel">
-                <div class="panel-header">
-                  <div>
-                    <h2>Hostel Security Monitor</h2>
-                    <p>Track hostel-specific students, RFID readers, geofence zones, and security alerts.</p>
-                  </div>
-
-                  <span class="panel-badge">Hostel Access Control</span>
-                </div>
-
-                <div class="hostel-summary-grid">
-                  <section class="hostel-summary-card">
-                    <span>Total Hostels</span>
-                    <strong>{{ hostels.length }}</strong>
-                    <p>Registered hostel facilities</p>
-                  </section>
-
-                  <section class="hostel-summary-card">
-                    <span>Assigned Students</span>
-                    <strong>{{ totalHostelStudents }}</strong>
-                    <p>Students with hostel allocation</p>
-                  </section>
-
-                  <section class="hostel-summary-card">
-                    <span>Hostel Alerts</span>
-                    <strong>{{ totalHostelAlerts }}</strong>
-                    <p>Open or acknowledged hostel alerts</p>
-                  </section>
-
-                  <section class="hostel-summary-card">
-                    <span>Hostel Readers</span>
-                    <strong>{{ readers.filter((reader) => reader.hostel_id).length }}</strong>
-                    <p>RFID readers linked to hostels</p>
-                  </section>
-                </div>
-
-                <div class="hostel-layout">
-                  <section class="hostel-list-panel">
-                    <h3>Hostel Facilities</h3>
-
-                    <div class="hostel-card-list">
-                      <div
-                        v-for="hostel in hostelReport"
-                        :key="hostel.id"
-                        class="hostel-card"
-                      >
-                        <div class="hostel-card-top">
-                          <div>
-                            <h4>{{ hostel.name }}</h4>
-                            <p>{{ hostel.gender || 'mixed' }} hostel</p>
-                          </div>
-
-                          <span
-                            class="hostel-status"
-                            :class="{ 'hostel-status-alert': hostel.active_alerts_count > 0 }"
-                          >
-                            {{ hostel.active_alerts_count > 0 ? 'Alert' : 'Normal' }}
-                          </span>
-                        </div>
-
-                        <div class="hostel-metrics">
-                          <div>
-                            <span>Students</span>
-                            <strong>{{ hostel.students_count }}</strong>
-                          </div>
-
-                          <div>
-                            <span>Readers</span>
-                            <strong>{{ hostel.readers_count }}</strong>
-                          </div>
-
-                          <div>
-                            <span>Zones</span>
-                            <strong>{{ hostel.zones_count }}</strong>
-                          </div>
-
-                          <div>
-                            <span>Occupancy</span>
-                            <strong>{{ hostel.occupancy }}</strong>
-                          </div>
-                        </div>
-                      </div>
-
-                      <p v-if="!hostelReport.length" class="empty-text">
-                        No hostels found. Seed hostel data in Supabase first.
-                      </p>
-                    </div>
-                  </section>
-
-                  <section class="hostel-list-panel">
-                    <h3>Hostel Security Alerts</h3>
-
-                    <div class="alert-list">
-                      <div
-                        v-for="alert in hostelRelatedAlerts.slice(0, 8)"
-                        :key="alert.id"
-                        class="alert-item"
-                        :class="`alert-${alert.severity}`"
-                      >
-                        <div>
-                          <strong>{{ alert.alert_type }}</strong>
-                          <p>{{ alert.message }}</p>
-                        </div>
-
-                        <small>{{ formatTime(alert.created_at) }}</small>
-                      </div>
-
-                      <p v-if="!hostelRelatedAlerts.length" class="empty-text">
-                        No active hostel-related alerts.
-                      </p>
-                    </div>
-                  </section>
-                </div>
-
-                <section class="hostel-list-panel hostel-table-panel">
-                  <h3>Assigned Hostel Students</h3>
-
-                  <div class="data-table">
-                    <div class="table-head">
-                      <span>Name</span>
-                      <span>Matric Number</span>
-                      <span>Gender</span>
-                      <span>RFID UID</span>
-                    </div>
-
-                    <div
-                      v-for="student in students.filter((student) => student.hostel_id)"
-                      :key="student.id"
-                      class="table-row"
-                    >
-                      <span>{{ student.full_name }}</span>
-                      <span>{{ student.matric_number }}</span>
-                      <span>{{ student.gender }}</span>
-                      <span>{{ student.rfid_uid }}</span>
-                    </div>
-                  </div>
-                </section>
-              </article>
-            </template>
 
             <!-- SIMULATION -->
             <template v-else-if="activeSection === 'simulation'">
@@ -1740,6 +1546,99 @@ onUnmounted(async () => {
               </article>
             </template>
 
+            <template v-else-if="activeSection === 'emergency'">
+              <article class="panel full-panel">
+                <div class="panel-header">
+                  <div>
+                    <h2>Emergency Lockdown</h2>
+                    <p>Activate or deactivate campus-wide emergency access restriction.</p>
+                  </div>
+
+                  <span
+                    class="lockdown-pill"
+                    :class="{ 'lockdown-active': emergencyLockdown.enabled }"
+                  >
+                    {{ emergencyLockdown.enabled ? 'Lockdown Active' : 'Normal Operation' }}
+                  </span>
+                </div>
+
+                <div class="lockdown-grid">
+                  <section class="lockdown-card">
+                    <h3>Current Emergency Status</h3>
+
+                    <p v-if="emergencyLockdown.enabled" class="lockdown-warning">
+                      Emergency lockdown is currently active. Student RFID access attempts will be denied and logged as critical alerts.
+                    </p>
+
+                    <p v-else class="normal-message">
+                      Campus access is operating under normal geofence rules.
+                    </p>
+
+                    <div class="lockdown-details">
+                      <div>
+                        <span>Reason</span>
+                        <strong>{{ emergencyLockdown.reason || 'No active emergency' }}</strong>
+                      </div>
+
+                      <div>
+                        <span>Activated By</span>
+                        <strong>{{ emergencyLockdown.activated_by || 'N/A' }}</strong>
+                      </div>
+
+                      <div>
+                        <span>Activated At</span>
+                        <strong>
+                          {{
+                            emergencyLockdown.activated_at
+                              ? formatDate(emergencyLockdown.activated_at)
+                              : 'N/A'
+                          }}
+                        </strong>
+                      </div>
+                    </div>
+                  </section>
+
+                  <section class="lockdown-card">
+                    <h3>Lockdown Control</h3>
+
+                    <label class="lockdown-label">
+                      Lockdown Reason
+                      <textarea
+                        v-model="lockdownReason"
+                        rows="4"
+                        placeholder="Enter reason for lockdown..."
+                        :disabled="emergencyLockdown.enabled"
+                      ></textarea>
+                    </label>
+
+                    <div class="lockdown-actions">
+                      <button
+                        type="button"
+                        class="danger-btn"
+                        :disabled="lockdownLoading || emergencyLockdown.enabled || profile?.role !== 'global_admin'"
+                        @click="activateLockdown"
+                      >
+                        {{ lockdownLoading ? 'Activating...' : 'Activate Lockdown' }}
+                      </button>
+
+                      <button
+                        type="button"
+                        class="safe-btn"
+                        :disabled="lockdownLoading || !emergencyLockdown.enabled || profile?.role !== 'global_admin'"
+                        @click="deactivateLockdown"
+                      >
+                        {{ lockdownLoading ? 'Deactivating...' : 'Deactivate Lockdown' }}
+                      </button>
+                    </div>
+
+                    <p v-if="profile?.role !== 'global_admin'" class="empty-text">
+                      Only Global Admin users can change emergency lockdown status.
+                    </p>
+                  </section>
+                </div>
+              </article>
+            </template>
+
             <template v-else-if="activeSection === 'reports'">
               <article class="panel full-panel">
                 <div class="panel-header">
@@ -1876,99 +1775,6 @@ onUnmounted(async () => {
               </article>
             </template>
 
-            <template v-else-if="activeSection === 'emergency'">
-              <article class="panel full-panel">
-                <div class="panel-header">
-                  <div>
-                    <h2>Emergency Lockdown</h2>
-                    <p>Activate or deactivate campus-wide emergency access restriction.</p>
-                  </div>
-
-                  <span
-                    class="lockdown-pill"
-                    :class="{ 'lockdown-active': emergencyLockdown.enabled }"
-                  >
-                    {{ emergencyLockdown.enabled ? 'Lockdown Active' : 'Normal Operation' }}
-                  </span>
-                </div>
-
-                <div class="lockdown-grid">
-                  <section class="lockdown-card">
-                    <h3>Current Emergency Status</h3>
-
-                    <p v-if="emergencyLockdown.enabled" class="lockdown-warning">
-                      Emergency lockdown is currently active. Student RFID access attempts will be denied and logged as critical alerts.
-                    </p>
-
-                    <p v-else class="normal-message">
-                      Campus access is operating under normal geofence rules.
-                    </p>
-
-                    <div class="lockdown-details">
-                      <div>
-                        <span>Reason</span>
-                        <strong>{{ emergencyLockdown.reason || 'No active emergency' }}</strong>
-                      </div>
-
-                      <div>
-                        <span>Activated By</span>
-                        <strong>{{ emergencyLockdown.activated_by || 'N/A' }}</strong>
-                      </div>
-
-                      <div>
-                        <span>Activated At</span>
-                        <strong>
-                          {{
-                            emergencyLockdown.activated_at
-                              ? formatDate(emergencyLockdown.activated_at)
-                              : 'N/A'
-                          }}
-                        </strong>
-                      </div>
-                    </div>
-                  </section>
-
-                  <section class="lockdown-card">
-                    <h3>Lockdown Control</h3>
-
-                    <label class="lockdown-label">
-                      Lockdown Reason
-                      <textarea
-                        v-model="lockdownReason"
-                        rows="4"
-                        placeholder="Enter reason for lockdown..."
-                        :disabled="emergencyLockdown.enabled"
-                      ></textarea>
-                    </label>
-
-                    <div class="lockdown-actions">
-                      <button
-                        type="button"
-                        class="danger-btn"
-                        :disabled="lockdownLoading || emergencyLockdown.enabled || profile?.role !== 'global_admin'"
-                        @click="activateLockdown"
-                      >
-                        {{ lockdownLoading ? 'Activating...' : 'Activate Lockdown' }}
-                      </button>
-
-                      <button
-                        type="button"
-                        class="safe-btn"
-                        :disabled="lockdownLoading || !emergencyLockdown.enabled || profile?.role !== 'global_admin'"
-                        @click="deactivateLockdown"
-                      >
-                        {{ lockdownLoading ? 'Deactivating...' : 'Deactivate Lockdown' }}
-                      </button>
-                    </div>
-
-                    <p v-if="profile?.role !== 'global_admin'" class="empty-text">
-                      Only Global Admin users can change emergency lockdown status.
-                    </p>
-                  </section>
-                </div>
-              </article>
-            </template>
-
             <template v-else-if="activeSection === 'settings'">
               <article class="panel full-panel">
                 <div class="panel-header">
@@ -2072,7 +1878,6 @@ onUnmounted(async () => {
                 </div>
               </article>
             </template>
-            
 
             <template v-else>
             <article class="panel full-panel">
@@ -3266,139 +3071,6 @@ onUnmounted(async () => {
   align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
-}
-
-.hostel-summary-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.9rem;
-  margin-bottom: 1rem;
-}
-
-.hostel-summary-card,
-.hostel-list-panel {
-  padding: 1rem;
-  border-radius: 1.1rem;
-  background: rgba(148, 163, 184, 0.08);
-  border: 1px solid rgba(148, 163, 184, 0.14);
-}
-
-.hostel-summary-card span {
-  color: #94a3b8;
-  font-size: 0.8rem;
-  font-weight: 800;
-}
-
-.hostel-summary-card strong {
-  display: block;
-  margin-top: 0.35rem;
-  color: #ffffff;
-  font-size: 2rem;
-}
-
-.hostel-summary-card p {
-  margin-bottom: 0;
-  color: #93c5fd;
-  font-size: 0.85rem;
-}
-
-.hostel-layout {
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.hostel-list-panel h3 {
-  margin-top: 0;
-  color: #dbeafe;
-}
-
-.hostel-card-list {
-  display: grid;
-  gap: 0.8rem;
-}
-
-.hostel-card {
-  padding: 1rem;
-  border-radius: 1rem;
-  background: rgba(15, 23, 42, 0.65);
-  border: 1px solid rgba(148, 163, 184, 0.12);
-}
-
-.hostel-card-top {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 0.8rem;
-}
-
-.hostel-card-top h4 {
-  margin: 0;
-  color: #ffffff;
-}
-
-.hostel-card-top p {
-  margin: 0.2rem 0 0;
-  color: #94a3b8;
-  text-transform: capitalize;
-}
-
-.hostel-status {
-  height: fit-content;
-  padding: 0.35rem 0.65rem;
-  border-radius: 999px;
-  color: #bbf7d0;
-  background: rgba(34, 197, 94, 0.14);
-  border: 1px solid rgba(34, 197, 94, 0.28);
-  font-size: 0.72rem;
-  font-weight: 900;
-}
-
-.hostel-status-alert {
-  color: #fecaca;
-  background: rgba(239, 68, 68, 0.14);
-  border-color: rgba(239, 68, 68, 0.3);
-}
-
-.hostel-metrics {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.6rem;
-}
-
-.hostel-metrics div {
-  padding: 0.75rem;
-  border-radius: 0.8rem;
-  background: rgba(148, 163, 184, 0.08);
-}
-
-.hostel-metrics span {
-  display: block;
-  color: #94a3b8;
-  font-size: 0.72rem;
-}
-
-.hostel-metrics strong {
-  display: block;
-  margin-top: 0.25rem;
-  color: #ffffff;
-  font-size: 1.2rem;
-}
-
-.hostel-table-panel {
-  margin-top: 1rem;
-}
-
-@media screen and (max-width: 900px) {
-  .hostel-summary-grid,
-  .hostel-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .hostel-metrics {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 @media screen and (max-width: 900px) {
