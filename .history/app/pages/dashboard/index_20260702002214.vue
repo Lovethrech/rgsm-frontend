@@ -1051,51 +1051,7 @@ const clearSelectedGeofence = () => {
   }
 }
 
-const selectReader = (reader) => {
-  selectedReader.value = reader
-}
 
-const updateReaderStatus = async (reader, isActive) => {
-  readerActionLoading.value = true
-  authError.value = ''
-
-  try {
-    const { data, error } = await supabase
-      .from('rfid_readers')
-      .update({
-        is_active: isActive,
-        updated_at: new Date().toISOString()
-      })
-      .eq('id', reader.id)
-      .select()
-      .single()
-
-    if (error) {
-      throw error
-    }
-
-    readers.value = readers.value.map((item) =>
-      item.id === data.id ? data : item
-    )
-
-    if (selectedReader.value?.id === data.id) {
-      selectedReader.value = data
-    }
-  } catch (error) {
-    console.error('Failed to update reader status:', error)
-    authError.value = error?.message || 'Failed to update RFID reader status.'
-  } finally {
-    readerActionLoading.value = false
-  }
-}
-
-const activateReader = async (reader) => {
-  await updateReaderStatus(reader, true)
-}
-
-const deactivateReader = async (reader) => {
-  await updateReaderStatus(reader, false)
-}
 
 onMounted(async () => {
   loading.value = true
@@ -1382,158 +1338,6 @@ onUnmounted(async () => {
             </div>
             </template>
 
-            <template v-else-if="activeSection === 'readers'">
-              <article class="panel full-panel">
-                <div class="panel-header">
-                  <div>
-                    <h2>RFID Reader Management</h2>
-                    <p>Monitor RFID readers, device status, locations, and security activity.</p>
-                  </div>
-
-                  <span class="panel-badge">Device Layer</span>
-                </div>
-
-                <div class="reader-summary-grid">
-                  <section class="reader-summary-card">
-                    <span>Total Readers</span>
-                    <strong>{{ readers.length }}</strong>
-                    <p>Registered RFID readers</p>
-                  </section>
-
-                  <section class="reader-summary-card">
-                    <span>Active Readers</span>
-                    <strong>{{ activeReaders.length }}</strong>
-                    <p>Currently enabled devices</p>
-                  </section>
-
-                  <section class="reader-summary-card">
-                    <span>Inactive Readers</span>
-                    <strong>{{ inactiveReaders.length }}</strong>
-                    <p>Disabled or unavailable devices</p>
-                  </section>
-
-                  <section class="reader-summary-card">
-                    <span>Hostel Readers</span>
-                    <strong>{{ hostelReaders.length }}</strong>
-                    <p>Linked to hostel security zones</p>
-                  </section>
-                </div>
-
-                <div class="reader-layout">
-                  <section class="reader-list-panel">
-                    <h3>Reader Devices</h3>
-
-                    <div class="reader-card-list">
-                      <button
-                        v-for="reader in readerReport"
-                        :key="reader.id"
-                        type="button"
-                        class="reader-card"
-                        :class="{ 'selected-reader-card': selectedReader?.id === reader.id }"
-                        @click="selectReader(reader)"
-                      >
-                        <div class="reader-card-top">
-                          <div>
-                            <h4>{{ reader.name }}</h4>
-                            <p>{{ reader.location || 'No location provided' }}</p>
-                          </div>
-
-                          <span
-                            class="reader-status"
-                            :class="{ 'reader-status-inactive': !reader.is_active }"
-                          >
-                            {{ reader.is_active ? 'Active' : 'Inactive' }}
-                          </span>
-                        </div>
-
-                        <div class="reader-meta">
-                          <span>{{ reader.reader_code }}</span>
-                          <span>{{ reader.hostel_id ? 'Hostel Reader' : 'Campus Reader' }}</span>
-                          <span>{{ reader.events_count }} events</span>
-                          <span>{{ reader.denied_count }} denied</span>
-                        </div>
-                      </button>
-
-                      <p v-if="!readers.length" class="empty-text">
-                        No RFID readers found.
-                      </p>
-                    </div>
-                  </section>
-
-                  <section class="reader-detail-panel">
-                    <div v-if="selectedReader">
-                      <div class="reader-detail-header">
-                        <div>
-                          <h3>{{ selectedReader.name }}</h3>
-                          <p>{{ selectedReader.reader_code }}</p>
-                        </div>
-
-                        <span
-                          class="reader-status"
-                          :class="{ 'reader-status-inactive': !selectedReader.is_active }"
-                        >
-                          {{ selectedReader.is_active ? 'Active' : 'Inactive' }}
-                        </span>
-                      </div>
-
-                      <div class="reader-detail-grid">
-                        <div>
-                          <span>Location</span>
-                          <strong>{{ selectedReader.location || 'N/A' }}</strong>
-                        </div>
-
-                        <div>
-                          <span>Reader Type</span>
-                          <strong>{{ selectedReader.hostel_id ? 'Hostel Reader' : 'Campus Reader' }}</strong>
-                        </div>
-
-                        <div>
-                          <span>Latitude</span>
-                          <strong>{{ selectedReader.latitude || 'N/A' }}</strong>
-                        </div>
-
-                        <div>
-                          <span>Longitude</span>
-                          <strong>{{ selectedReader.longitude || 'N/A' }}</strong>
-                        </div>
-                      </div>
-
-                      <div class="reader-actions">
-                        <button
-                          v-if="!selectedReader.is_active"
-                          type="button"
-                          class="safe-btn"
-                          :disabled="readerActionLoading || profile?.role !== 'global_admin'"
-                          @click="activateReader(selectedReader)"
-                        >
-                          {{ readerActionLoading ? 'Activating...' : 'Activate Reader' }}
-                        </button>
-
-                        <button
-                          v-if="selectedReader.is_active"
-                          type="button"
-                          class="danger-btn"
-                          :disabled="readerActionLoading || profile?.role !== 'global_admin'"
-                          @click="deactivateReader(selectedReader)"
-                        >
-                          {{ readerActionLoading ? 'Deactivating...' : 'Deactivate Reader' }}
-                        </button>
-                      </div>
-
-                      <p v-if="profile?.role !== 'global_admin'" class="empty-text">
-                        Only Global Admin users can activate or deactivate RFID readers.
-                      </p>
-                    </div>
-
-                    <div v-else class="placeholder-block">
-                      <h3>Select an RFID reader</h3>
-                      <p>Choose a reader from the list to view device details and control its status.</p>
-                    </div>
-                  </section>
-                </div>
-              </article>
-            </template>
-
             <template v-else-if="activeSection === 'live-geofence'">
             <article class="panel full-panel">
                 <div class="panel-header">
@@ -1658,6 +1462,32 @@ onUnmounted(async () => {
                     <span>{{ student.matric_number }}</span>
                     <span>{{ student.rfid_uid }}</span>
                     <span>{{ student.department || 'N/A' }}</span>
+                </div>
+                </div>
+            </article>
+            </template>
+
+            <template v-else-if="activeSection === 'readers'">
+            <article class="panel full-panel">
+                <div class="panel-header">
+                <div>
+                    <h2>RFID Readers</h2>
+                    <p>Reader devices acting as geofence triggers.</p>
+                </div>
+                </div>
+
+                <div class="zone-grid">
+                <div
+                    v-for="reader in readers"
+                    :key="reader.id"
+                    class="zone-card"
+                >
+                    <div class="zone-card-top">
+                    <h3>{{ reader.name }}</h3>
+                    <span>{{ reader.is_active ? 'Active' : 'Inactive' }}</span>
+                    </div>
+                    <p>{{ reader.location || 'No location provided.' }}</p>
+                    <strong>{{ reader.reader_code }}</strong>
                 </div>
                 </div>
             </article>
@@ -4016,170 +3846,6 @@ onUnmounted(async () => {
 .role-chip:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-}
-
-.reader-summary-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.9rem;
-  margin-bottom: 1rem;
-}
-
-.reader-summary-card,
-.reader-list-panel,
-.reader-detail-panel {
-  padding: 1rem;
-  border-radius: 1.1rem;
-  background: rgba(148, 163, 184, 0.08);
-  border: 1px solid rgba(148, 163, 184, 0.14);
-}
-
-.reader-summary-card span {
-  color: #94a3b8;
-  font-size: 0.8rem;
-  font-weight: 800;
-}
-
-.reader-summary-card strong {
-  display: block;
-  margin-top: 0.35rem;
-  color: #ffffff;
-  font-size: 2rem;
-}
-
-.reader-summary-card p {
-  margin-bottom: 0;
-  color: #93c5fd;
-  font-size: 0.85rem;
-}
-
-.reader-layout {
-  display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: 1rem;
-}
-
-.reader-list-panel h3,
-.reader-detail-panel h3 {
-  margin-top: 0;
-  color: #dbeafe;
-}
-
-.reader-card-list {
-  display: grid;
-  gap: 0.8rem;
-  max-height: 640px;
-  overflow-y: auto;
-}
-
-.reader-card {
-  width: 100%;
-  border: 1px solid rgba(148, 163, 184, 0.14);
-  border-radius: 1rem;
-  padding: 1rem;
-  background: rgba(15, 23, 42, 0.65);
-  color: #ffffff;
-  text-align: left;
-  cursor: pointer;
-}
-
-.reader-card:hover,
-.selected-reader-card {
-  border-color: rgba(96, 165, 250, 0.45);
-  background: rgba(59, 130, 246, 0.13);
-}
-
-.reader-card-top,
-.reader-detail-header {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.reader-card h4,
-.reader-detail-header h3 {
-  margin: 0;
-  color: #ffffff;
-}
-
-.reader-card p,
-.reader-detail-header p {
-  margin: 0.25rem 0 0;
-  color: #94a3b8;
-}
-
-.reader-status {
-  height: fit-content;
-  padding: 0.35rem 0.65rem;
-  border-radius: 999px;
-  color: #bbf7d0;
-  background: rgba(34, 197, 94, 0.14);
-  border: 1px solid rgba(34, 197, 94, 0.28);
-  font-size: 0.72rem;
-  font-weight: 900;
-}
-
-.reader-status-inactive {
-  color: #fecaca;
-  background: rgba(239, 68, 68, 0.14);
-  border-color: rgba(239, 68, 68, 0.3);
-}
-
-.reader-meta {
-  display: flex;
-  gap: 0.45rem;
-  flex-wrap: wrap;
-  margin-top: 0.8rem;
-}
-
-.reader-meta span {
-  padding: 0.28rem 0.55rem;
-  border-radius: 999px;
-  background: rgba(148, 163, 184, 0.12);
-  color: #bfdbfe;
-  font-size: 0.72rem;
-  font-weight: 800;
-}
-
-.reader-detail-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.8rem;
-  margin-top: 1rem;
-}
-
-.reader-detail-grid div {
-  padding: 0.9rem;
-  border-radius: 0.9rem;
-  background: rgba(15, 23, 42, 0.65);
-}
-
-.reader-detail-grid span {
-  display: block;
-  color: #94a3b8;
-  font-size: 0.75rem;
-  font-weight: 800;
-}
-
-.reader-detail-grid strong {
-  display: block;
-  margin-top: 0.35rem;
-  color: #ffffff;
-}
-
-.reader-actions {
-  margin-top: 1rem;
-  display: flex;
-  gap: 0.8rem;
-  flex-wrap: wrap;
-}
-
-@media screen and (max-width: 900px) {
-  .reader-summary-grid,
-  .reader-layout,
-  .reader-detail-grid {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media screen and (max-width: 900px) {
