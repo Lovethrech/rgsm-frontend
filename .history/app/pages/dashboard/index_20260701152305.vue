@@ -61,7 +61,7 @@ const simulationScenarios = [
 ]
 
 // API FUNCTIONS
-const backendBaseUrl = 'https://rgsm-backend.onrender.com'
+const backendBaseUrl = 'http://127.0.0.1:8000'
 
 const getSimulationStatus = async () => {
   try {
@@ -1629,6 +1629,7 @@ onUnmounted(async () => {
   display: block;
 }
 
+<!-- SIMULATION -->
 .simulation-status-pill {
   padding: 0.5rem 0.85rem;
   border-radius: 999px;

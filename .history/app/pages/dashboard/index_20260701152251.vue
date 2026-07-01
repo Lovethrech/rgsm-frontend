@@ -61,7 +61,7 @@ const simulationScenarios = [
 ]
 
 // API FUNCTIONS
-const backendBaseUrl = 'https://rgsm-backend.onrender.com'
+const backendBaseUrl = 'http://127.0.0.1:8000'
 
 const getSimulationStatus = async () => {
   try {
@@ -1629,128 +1629,7 @@ onUnmounted(async () => {
   display: block;
 }
 
-.simulation-status-pill {
-  padding: 0.5rem 0.85rem;
-  border-radius: 999px;
-  background: rgba(148, 163, 184, 0.14);
-  color: #cbd5e1;
-  font-size: 0.8rem;
-  font-weight: 900;
-}
-
-.simulation-running {
-  background: rgba(34, 197, 94, 0.14);
-  color: #bbf7d0;
-  border: 1px solid rgba(34, 197, 94, 0.3);
-}
-
-.simulation-layout {
-  display: grid;
-  grid-template-columns: 0.85fr 1.15fr;
-  gap: 1rem;
-}
-
-.simulation-control-card {
-  padding: 1.2rem;
-  border-radius: 1.2rem;
-  background: rgba(148, 163, 184, 0.08);
-  border: 1px solid rgba(148, 163, 184, 0.14);
-}
-
-.simulation-control-card h3 {
-  margin-top: 0;
-  color: #dbeafe;
-}
-
-.simulation-form {
-  display: grid;
-  gap: 1rem;
-}
-
-.simulation-form label {
-  display: grid;
-  gap: 0.45rem;
-  color: #cbd5e1;
-  font-size: 0.9rem;
-  font-weight: 800;
-}
-
-.simulation-form input,
-.simulation-form select {
-  width: 100%;
-  padding: 0.85rem;
-  border-radius: 0.85rem;
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  background: rgba(15, 23, 42, 0.9);
-  color: #ffffff;
-  outline: none;
-}
-
-.scenario-description {
-  margin: -0.4rem 0 0;
-  color: #93c5fd;
-  font-size: 0.85rem;
-}
-
-.simulation-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.8rem;
-}
-
-.simulation-actions button:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
-.simulation-message {
-  color: #bfdbfe;
-  background: rgba(59, 130, 246, 0.12);
-  padding: 0.8rem;
-  border-radius: 0.85rem;
-  border: 1px solid rgba(96, 165, 250, 0.18);
-}
-
-.simulation-metrics {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.8rem;
-  margin-bottom: 1rem;
-}
-
-.simulation-metrics div {
-  padding: 1rem;
-  border-radius: 1rem;
-  background: rgba(15, 23, 42, 0.65);
-}
-
-.simulation-metrics span {
-  display: block;
-  color: #94a3b8;
-  font-size: 0.8rem;
-}
-
-.simulation-metrics strong {
-  display: block;
-  margin-top: 0.35rem;
-  color: #ffffff;
-  font-size: 1.8rem;
-}
-
-.simulation-feed {
-  max-height: 360px;
-  overflow-y: auto;
-}
-
-@media screen and (max-width: 900px) {
-  .simulation-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .simulation-metrics {
-    grid-template-columns: 1fr;
-  }
-}
+SUIM
 
 @keyframes pulse {
   0% {

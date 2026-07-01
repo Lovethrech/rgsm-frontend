@@ -61,7 +61,7 @@ const simulationScenarios = [
 ]
 
 // API FUNCTIONS
-const backendBaseUrl = 'https://rgsm-backend.onrender.com'
+const backendBaseUrl = 'http://127.0.0.1:8000'
 
 const getSimulationStatus = async () => {
   try {
